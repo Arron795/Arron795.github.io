@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>基于STM32F103C8T6以USB to TTL 和 ST-LINK V2两种方式点亮LED小灯泡 | Arron&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1696320559756">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="一、硬件设备
+所需设备：
+            1、STM32F103C8T6；
+
+            2、USB 转 TLL 或 ST-LINK V2 01-0；
+
+            3、杜邦线若干；
+
+           ..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Arron795.github.io">
+        <img src="https://Arron795.github.io/images/avatar.png?v=1696320559756" class="site-logo">
+        <h1 class="site-title">Arron&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      来自Arron的blog · ❀
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">基于STM32F103C8T6以USB to TTL 和 ST-LINK V2两种方式点亮LED小灯泡</h2>
+            <div class="post-date">2022-11-19</div>
+            
+              <div class="feature-container" style="background-image: url('https://Arron795.github.io/post-images/ji-yu-stm32f103c8t6.gif')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="一-硬件设备">一、硬件设备</h2>
+<p>所需设备：</p>
+<pre><code>            1、STM32F103C8T6；
+
+            2、USB 转 TLL 或 ST-LINK V2 01-0；
+
+            3、杜邦线若干；
+
+            4、面包板1个；
+
+            5、USB安卓数据线（使用USB 转 TLL需要用到）；
+</code></pre>
+<h2 id="二-工程建立">二、工程建立</h2>
+<p><strong>1、首先需要建立一个STM32F103C8T6的keil工程。</strong></p>
+<p>​    可以根据以下链接结合实际情况建立：</p>
+<p>​    <a href="https://blog.csdn.net/hongliwong/article/details/110863014">(74条消息) STM32新建keil工程具体步骤（详细）_爱学习的小王呀的博客-CSDN博客</a></p>
+<h2 id="三-环境配置编写代码">三、环境配置&amp;编写代码</h2>
+<h3 id="1-环境配置">1、环境配置</h3>
+<p>环境配置和代码可以参考以下两个链接：</p>
+<p><a href="https://blog.csdn.net/txmnQAQ/article/details/120903713">(74条消息) 用STM32F103C8T6制作流水灯_甜心猛男的博客-CSDN博客_c8t6烧程序时需要改变跳线帽位置吗</a></p>
+<p><a href="https://blog.csdn.net/shutupbb/article/details/120922397">(74条消息) STM32F103寄存器方式点亮LED流水灯_Melody crush的博客-CSDN博客_stm32f103寄存器led点灯</a></p>
+<p>这里简单给出几张个人认为需要注意的点：</p>
+<ol>
+<li>先点击魔法棒</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695990403878.png" alt="" loading="lazy"></figure>
+<ol start="2">
+<li>再点击Device</li>
+</ol>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695990432355.png" alt="" loading="lazy"></figure>
+<ol start="3">
+<li>配置红框内容 ，并点击Debug（如果使用USB 转 TTL则不用勾选蓝色框；如果使用ST-link做的则要勾选）</li>
+</ol>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1695990484911.png" alt="" loading="lazy"></figure>
+<ol start="4">
+<li>点击上图蓝色框里的Setting，选择Flash Download，进行以下配置。（如果不选Reset and Run则每次烧录到板上后都需要按一下板上的Reset按键才会看到现象。选不选看个人，影响不大</li>
+</ol>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1695990500972.png" alt="" loading="lazy"></figure>
+<h3 id="2-编写main函数"><strong>2、编写main函数</strong></h3>
+<pre><code class="language-c">//头文件
+#include &quot;stm32f10x.h&quot;
+#include &quot;GPIOLIKE51.h&quot;
+ 
+//函数声明
+void LED_Init(void);
+void RCC_Configuration(void);
+ 
+//=============================================================================
+//文件名称：Delay
+//功能概要：延时
+//参数说明：nCount：延时长短
+//函数返回：无
+//=============================================================================
+ 
+void Delay(uint32_t nCount)
+{
+  for(; nCount != 0; nCount--);
+}
+ 
+ 
+//=============================================================================
+//文件名称：main
+//功能概要：主函数
+//参数说明：无
+//函数返回：int
+//=============================================================================
+int main(void)
+{
+	
+ 
+	RCC_Configuration();				//开启GPIO时钟
+		
+	LED_Init();                         //初始LED引脚的GPIO口
+    while (1)
+		{
+			PAout(1)=0;					//1为灭
+			Delay(0xfffff);             //延时
+			Delay(0xfffff);	
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			PAout(1)=1;
+ 
+			PBout(12)=0;					//0为亮
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			PBout(12)=1;
+ 
+			PCout(15)=0;					
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			PCout(15)=1;
+ 
+    }
+}
+ 
+ 
+//=============================================================================
+//文件名称：RCC_Configuration
+//功能概要：开启GPIO时钟
+//参数说明：无
+//函数返回：无
+//=============================================================================
+ 
+void RCC_Configuration(void)
+{
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);		//开启GPIOA时钟并使能
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);		//开启GPIOB时钟并使能
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);		//开启GPIOC时钟并使能
+}
+ 
+ 
+ 
+//=============================================================================
+//文件名称：LED_Init
+//功能概要：LED引脚的GPIO初始化
+//参数说明：无
+//函数返回：无
+//=============================================================================
+ 
+void LED_Init(void)
+{
+		GPIO_InitTypeDef GPIO_InitStruct;												//声明GPIO初始化结构体,声明要在最前面
+ 
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);	//开启GPIOA时钟并使能
+ 
+		
+		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_1;					//定义GPIO初始化结构体的GPIO引脚
+		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;			//定义GPIO初始化结构体的GPIO输出模式
+		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;		    //定义GPIO初始化结构体的GPIO速率
+ 
+		GPIO_Init(GPIOA,  &amp;GPIO_InitStruct);					//初始化GPIO
+ 
+	
+ 
+		
+		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_12;			    	//定义GPIO初始化结构体的GPIO引脚
+		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;			//定义GPIO初始化结构体的GPIO输出模式，推挽输出模式
+		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;		    //定义GPIO初始化结构体的GPIO速率
+ 
+		GPIO_Init(GPIOB,  &amp;GPIO_InitStruct);					//初始化GPIO
+ 
+		
+ 
+ 
+		
+		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_15;					//定义GPIO初始化结构体的GPIO引脚
+		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;			//定义GPIO初始化结构体的GPIO输出模式，推挽输出模式
+		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;			//定义GPIO初始化结构体的GPIO速率
+ 
+		GPIO_Init(GPIOC,  &amp;GPIO_InitStruct);					//初始化GPIO
+ 
+		
+}
+ 
+</code></pre>
+<p>​</p>
+<p>点击下面两个任意一个编译</p>
+<figure data-type="image" tabindex="5"><img src="https://Arron795.github.io/post-images/1695990523762.png" alt="" loading="lazy"></figure>
+<p>确保0错误，0警告。</p>
+<figure data-type="image" tabindex="6"><img src="https://Arron795.github.io/post-images/1695990535308.png" alt="" loading="lazy"></figure>
+<h2 id="四-硬件连接">四、硬件连接</h2>
+<h3 id="1-usb-转-ttl-方式">1、USB 转 TTL 方式</h3>
+<ol>
+<li>
+<p>将STM32F103C8T6插入面包板，注意！一定要插深一点！确保C8T6的引脚能和面包板进行导电！！（笔者因为这个小细节没注意，排查了好几天的代码、硬件，甚至以为是笔者焊接不到位，重新把板的引脚焊过...最后排查出来是面包板和开发板的引脚接触不紧密没导上电...血的眼泪...）</p>
+</li>
+<li>
+<p>USB 转 TLL硬件插上电脑USB端口。</p>
+</li>
+<li>
+<p>USB to TTL硬件和STM32F103C8T6连线。</p>
+<p><strong>跳线帽连接方式：<em>*UBOOT0 用1；UBOOT1用0*</em>。</strong></p>
+<figure data-type="image" tabindex="7"><img src="https://Arron795.github.io/post-images/1695990550879.png" alt="" loading="lazy"></figure>
+<p>​</p>
+<p>​		<strong>USB转TTL连接方式：用杜邦线将USB to TTL的GND连开发板的GND、3.3V连3.3V、<em>*RXD连接PA9*</em>、<em>*TXD连接PA10*</em></strong></p>
+</li>
+</ol>
+<figure data-type="image" tabindex="8"><img src="https://Arron795.github.io/post-images/1695990572211.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://Arron795.github.io/post-images/1695990579286.jpeg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://Arron795.github.io/post-images/1695990588021.jpeg" alt="" loading="lazy"></figure>
+<p>注意，下图此处有小红灯亮了，说明****RXD连接PA9****引脚连接可以导上电；如果是不亮的，则要检查一下是否会导电。</p>
+<figure data-type="image" tabindex="11"><img src="https://Arron795.github.io/post-images/1695990597120.png" alt="" loading="lazy"></figure>
+<p>LED小灯连接方式：根据代码设定的GPIO端口，把LED小灯插到对应的引脚即可。笔者插的是A1、B12、C15引脚。注意！小灯泡会有高低脚，高的一侧要插正极，低的一侧插负极。</p>
+<p>接地连接方式：用杜邦线把开发板上的G和面包板两侧的蓝色负极行连接起来。</p>
+<pre><code>最终连接效果：
+</code></pre>
+<figure data-type="image" tabindex="12"><img src="https://Arron795.github.io/post-images/1695990610863.jpeg" alt="" loading="lazy"></figure>
+<ol start="4">
+<li>打开设备管理器，确保有USB-SERIAL CH340（COMx）（如果没有显示或显示未知设备就去安装一个CH340的驱动）</li>
+</ol>
+<figure data-type="image" tabindex="13"><img src="https://Arron795.github.io/post-images/1695990621665.png" alt="" loading="lazy"></figure>
+<ol start="5">
+<li>
+<p>打开FlyMCU，确保刚才端口是空闲状态（一般来讲，设备管理器识别的COM口号和FlyMCU的COM口号是一致的。这里解释一下为什么这里的COM口号和上面不同，因为笔者没有当时的截图，下面这张图时后来写博客时补的图...原来的端口电脑经常识别有误，所以插了另一个端口。）</p>
+<figure data-type="image" tabindex="14"><img src="https://Arron795.github.io/post-images/1695990648554.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>进行以下配置，并点击三个小点...处，选择工程编译生成的.hex文件，点击开始编程。</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="15"><img src="https://Arron795.github.io/post-images/1695990660128.png" alt="" loading="lazy"></figure>
+<ol start="7">
+<li>别忘记按板上的Reset键，按了之后才会有反应。</li>
+</ol>
+<p>​		*常见问题：</p>
+<ul>
+<li>未知USB设备（设备描述符请求失败）</li>
+</ul>
+<figure data-type="image" tabindex="16"><img src="https://Arron795.github.io/post-images/1695990675581.png" alt="" loading="lazy"></figure>
+<ul>
+<li>FlyMCU的Port端口显示占用</li>
+</ul>
+<figure data-type="image" tabindex="17"><img src="https://Arron795.github.io/post-images/1695990711277.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>解决方法：右键卸载这个设备，再重新插拔USB 转 TTL，多试几次。笔者怀疑是USB转TLL和拓展坞的USB口接触不好导致的。</p>
+</blockquote>
+<ul>
+<li>Fly MCU 出现无法打开串口</li>
+</ul>
+<figure data-type="image" tabindex="18"><img src="https://Arron795.github.io/post-images/1695990762890.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>原因：说明电脑没有识别到USB转TTL的端口，请确保USB转TTL已经插上。如果确认插上，说明还是接触不好的问题。</p>
+<p>解决方法：重新插拔USB 转 TTL，多试几次。（如果有条件，可以尝试更换一个TTL）</p>
+</blockquote>
+<ul>
+<li>无法打开串口COMx:Not Support Setting(bps/byte size etc)!</li>
+</ul>
+<figure data-type="image" tabindex="19"><img src="https://Arron795.github.io/post-images/1695990773230.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>原因：RXD连接PA9没有成功，需要检查一下PA9引脚是否导电，可以看USB转TTL上的小红灯有没有亮，没亮就是没导上电。</p>
+<p>解决方法：1、更换TTL；2、更换杜邦线；3、插拔USB转TTL；4、重新焊接PA9引脚；5、如果之前烧录过其他程序，则尝试一下按Reset后再试一次。</p>
+</blockquote>
+<h3 id="2-st-link-v2-01-0方式">2、ST-LINK V2 01-0方式</h3>
+<ol>
+<li>
+<p>将STM32F103C8T6插入面包板，注意！<strong>一定要插深一点！确保C8T6的引脚能和面包板进行导电！！</strong></p>
+</li>
+<li>
+<p>ST-LINK V2仿真编程器插上电脑USB端口。</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="20"><img src="https://Arron795.github.io/post-images/1695990793647.jpeg" alt="" loading="lazy"></figure>
+<ol start="3">
+<li>
+<p>ST-LINK V2仿真编程器和STM32F103C8T6连线。</p>
+<blockquote>
+<ul>
+<li><em>跳线帽连接方式：<strong>*UBOOT0 用0；UBOOT1用0*</strong>。</em></li>
+</ul>
+<figure data-type="image" tabindex="21"><img src="https://Arron795.github.io/post-images/1695990801977.png" alt="" loading="lazy"></figure>
+<ul>
+<li>ST-LINK和电脑连接方式：（开发板上的DCLK就是ST-LINK上的CLK）</li>
+</ul>
+<figure data-type="image" tabindex="22"><img src="https://Arron795.github.io/post-images/1695990816553.jpeg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="23"><img src="https://Arron795.github.io/post-images/1695990829793.jpeg" alt="" loading="lazy"></figure>
+<ul>
+<li>LED小灯连接方式：根据代码设定的GPIO端口，把LED小灯插到对应的引脚即可。笔者插的是A1、B12、C15引脚。注意！小灯泡会有高低脚，高的一侧要插正极，低的一侧插负极。</li>
+</ul>
+<p>​            接地连接方式：用杜邦线把开发板上的G和面包板两侧的蓝色负极行连接起来。</p>
+<p>连接最终效果：<br>
+<img src="https://Arron795.github.io/post-images/1695990842215.jpeg" alt="" loading="lazy"><br>
+<img src="https://Arron795.github.io/post-images/1695990933154.jpeg" alt="" loading="lazy"></p>
+</blockquote>
+</li>
+<li>
+<p>打开设备管理器，确保有STM32 STLink （如果没有显示或显示未知设备就去安装一个STLink的驱动）</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="24"><img src="https://Arron795.github.io/post-images/1695990947103.png" alt="" loading="lazy"></figure>
+<ol start="5">
+<li>
+<p>打开Keil，在确认编译过、0错误，0警告后点击LOAD下载按钮。</p>
+<figure data-type="image" tabindex="25"><img src="https://Arron795.github.io/post-images/1695990973903.png" alt="" loading="lazy"></figure>
+<p>显示下载成功信息。</p>
+<figure data-type="image" tabindex="26"><img src="https://Arron795.github.io/post-images/1695990995095.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>如果在Debug的Setting勾选了Reset and Run则直接可以看到灯亮现象；如果没有勾选Reset and Run则需要再按一下开发板上的RESET按键才可以观察到灯亮现象。</p>
+</li>
+</ol>
+<h2 id="五-实验效果">五、实验效果</h2>
+<h3 id="1-usb-to-ttl">1、USB to TTL：</h3>
+<figure data-type="image" tabindex="27"><img src="https://Arron795.github.io/post-images/1695991008021.gif" alt="" loading="lazy"></figure>
+<h3 id="2-st-link-v2">2、ST-LINK V2 ：</h3>
+<figure data-type="image" tabindex="28"><img src="https://Arron795.github.io/post-images/1695991019339.gif" alt="" loading="lazy"></figure>
+<h2 id="六-写在最后">六、写在最后</h2>
+<p>​	 感谢文中所引用博客的作者提供了思路和帮助，再次感谢。</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Arron795.github.io/post/guan-yu-zai-qiao-jie-mo-shi-xia-yong-vmware-workstation-yun-xing-ubantu910-wu-fa-shang-wang-de-jie-jue-fang-fa/">
+                  <h3 class="post-title">
+                    关于在桥接模式下用VMware workstation运行Ubantu9.10无法上网的解决方法。
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

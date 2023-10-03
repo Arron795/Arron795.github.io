@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>VS2022新建Qt项目出现“找不到 异常来自HERSULT:0x80030002“的解决方法 | Arron&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1696320559756">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="问题描述：
+​	 Visual Studio 2022新建Qt Widgets Application 项目时出现 “找不到。异常来自HERSULT：80030002”。
+
+解决方法：
+打开VS，在顶栏找到
+拓展 —&gt; 管理扩展
+在已..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Arron795.github.io">
+        <img src="https://Arron795.github.io/images/avatar.png?v=1696320559756" class="site-logo">
+        <h1 class="site-title">Arron&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      来自Arron的blog · ❀
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">VS2022新建Qt项目出现“找不到 异常来自HERSULT:0x80030002“的解决方法</h2>
+            <div class="post-date">2023-02-06</div>
+            
+              <div class="feature-container" style="background-image: url('https://Arron795.github.io/post-images/vs2022-xin-jian-qt-xiang-mu-chu-xian-zhao-bu-dao-yi-chang-lai-zi-hersult0x80030002de-jie-jue-fang-fa.png')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="问题描述">问题描述：</h2>
+<p>​	 Visual Studio 2022新建Qt Widgets Application 项目时出现 “找不到。异常来自HERSULT：80030002”。</p>
+<hr>
+<h2 id="解决方法">解决方法：</h2>
+<p>打开VS，在顶栏找到</p>
+<p>拓展 —&gt; 管理扩展</p>
+<p>在已安装找到Qt VS Tools 点击卸载。（卸载完记得关闭所有VS窗口）</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695995813870.png" alt="" loading="lazy"></figure>
+<p>重启<a href="https://so.csdn.net/so/search?q=VS2022&amp;spm=1001.2101.3001.7020">VS2022</a>，还是点击扩展下的管理扩展 重新安装Qt VS Tools，安装完还是关闭所有VS窗口。</p>
+<p>再次重启VS2022，新建<a href="https://so.csdn.net/so/search?q=Qt%E9%A1%B9%E7%9B%AE&amp;spm=1001.2101.3001.7020">Qt项目</a>，顺利新建。</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695995818667.png" alt="" loading="lazy"></figure>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Arron795.github.io/post/ji-yu-stm32f103c8t6/">
+                  <h3 class="post-title">
+                    基于STM32F103C8T6以USB to TTL 和 ST-LINK V2两种方式点亮LED小灯泡
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

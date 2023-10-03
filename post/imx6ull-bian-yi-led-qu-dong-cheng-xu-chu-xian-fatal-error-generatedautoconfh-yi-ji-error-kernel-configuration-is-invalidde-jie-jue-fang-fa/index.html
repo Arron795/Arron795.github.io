@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title> IMX6ULL编译led驱动程序出现fatal error: generated/autoconf.h以及 ERROR: Kernel configuration is invalid.的解决方法 | Arron&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1696320559756">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="问题背景
+​        最近在学习IMX6ULL的驱动程序，在用make命令执行编译led驱动程序时，出现以下报错：
+make -C /home/book/100ask_imx6ull-sdk/Linux-4.9.88 M=pwd mo..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Arron795.github.io">
+        <img src="https://Arron795.github.io/images/avatar.png?v=1696320559756" class="site-logo">
+        <h1 class="site-title">Arron&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      来自Arron的blog · ❀
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title"> IMX6ULL编译led驱动程序出现fatal error: generated/autoconf.h以及 ERROR: Kernel configuration is invalid.的解决方法</h2>
+            <div class="post-date">2023-06-13</div>
+            
+              <div class="feature-container" style="background-image: url('https://Arron795.github.io/post-images/imx6ull-bian-yi-led-qu-dong-cheng-xu-chu-xian-fatal-error-generatedautoconfh-yi-ji-error-kernel-configuration-is-invalidde-jie-jue-fang-fa.png')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="问题背景">问题背景</h2>
+<p>​        最近在学习IMX6ULL的驱动程序，在用make命令执行编译led驱动程序时，出现以下报错：</p>
+<pre><code>make -C /home/book/100ask_imx6ull-sdk/Linux-4.9.88 M=pwd modules 
+make[1]: 进入目录“/home/book/100ask_imx6ull-sdk/Linux-4.9.88”
+
+  ERROR: Kernel configuration is invalid.
+         include/generated/autoconf.h or include/config/auto.conf are missing.
+         Run 'make oldconfig &amp;&amp; make prepare' on kernel src to fix it.
+
+  WARNING: Symbol version dump ./Module.symvers
+           is missing; modules will have no dependencies and modversions.
+
+  CC [M]  /home/book/01_all_series_quickstart/05_嵌入式Linux驱动开发基础知识/source/02_led_drv/00_led_drv_simple/imx6ull/led_drv.o
+In file included from :0:0:
+././include/linux/kconfig.h:4:10: fatal error: generated/autoconf.h: 没有那个文件或目录
+ #include &lt;generated/autoconf.h&gt;
+          ^~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+scripts/Makefile.build:299: recipe for target '/home/book/01_all_series_quickstart/05_嵌入式Linux驱动开发基础知识/source/02_led_drv/00_led_drv_simple/imx6ull/led_drv.o' failed
+make[2]: *** [/home/book/01_all_series_quickstart/05_嵌入式Linux驱动开发基础知识/source/02_led_drv/00_led_drv_simple/imx6ull/led_drv.o] Error 1
+Makefile:1499: recipe for target 'module/home/book/01_all_series_quickstart/05_嵌入式Linux驱动开发基础知识/source/02_led_drv/00_led_drv_simple/imx6ull' failed
+make[1]: *** [module/home/book/01_all_series_quickstart/05_嵌入式Linux驱动开发基础知识/source/02_led_drv/00_led_drv_simple/imx6ull] Error 2
+make[1]: 离开目录“/home/book/100ask_imx6ull-sdk/Linux-4.9.88”
+Makefile:13: recipe for target 'all' failed
+make: *** [all] Error 2
+</code></pre>
+<pre><code>    很明显，上面出现了两个错误和一个警告：
+</code></pre>
+<h3 id="错误1">错误1：</h3>
+<pre><code>ERROR: Kernel configuration is invalid.
+         include/generated/autoconf.h or include/config/auto.conf are missing.
+         Run 'make oldconfig &amp;&amp; make prepare' on kernel src to fix it.
+</code></pre>
+<p>大意是说内核配置无效。缺少include/generated/autoconf.h或include/config/auto.conf文件。</p>
+<p>需要特别注意的是，这里报错提示给出了解决建议：在内核源码的目录下运行make oldconfig &amp;&amp; make prepare来修复该报错。</p>
+<h3 id="错误2">错误2：</h3>
+<pre><code>././include/linux/kconfig.h:4:10: fatal error: generated/autoconf.h: 没有那个文件或目录
+ #include &lt;generated/autoconf.h&gt;
+          ^~~~~~~~~~~~~~~~~~~~~~
+</code></pre>
+<p>意思是说，././include/linux/kconfig.h里没有链接generated/autoconf.h文件。</p>
+<h3 id="警告">警告：</h3>
+<pre><code>  WARNING: Symbol version dump ./Module.symvers
+           is missing; modules will have no dependencies and modversions.
+</code></pre>
+<p>大意是说，Linux内核代码的目录下丢失了符号版本信息文件 Module.symvers文件，将会导致模块没有依赖项和版本信息。</p>
+<h2 id="解决过程">解决过程</h2>
+<p>​       首要考虑是按报错的建议操作去解决，但是到了Linux的源码目录下执行了make oldconfig，但是它会出现许多需要配置的问答，即使我长按空格按默认答案回答，依然需要很长的时间，在长按了一会儿后，直接Ctrl + C放弃了这个建议。几经周折后，终于找到了一个可行的解决方法。</p>
+<h2 id="解决方法">解决方法</h2>
+<p>1.首先进入内核源代码目录，执行以下命令：</p>
+<pre><code>make mrproper
+</code></pre>
+<p>​    这个命令会清除先前的编译结果和配置文件。</p>
+<p>2.配置内核编译选项和模块，例如执行以下命令：</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- 100ask_imx6ull_defconfig
+</code></pre>
+<p>​    其中，100ask_imx6ull_defconfig是我使用的硬件平台对应的配置文件。如使用其他配置文件，需要根据实际情况修改。</p>
+<p>3.生成Makefile文件，例如执行以下命令：</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
+</code></pre>
+<p>​    make menuconfig这个命令会打开一个文本界面的配置工具，可以在里面配置内核编译选项和模块。配置完成后，保存退出即可。</p>
+<p>​    具体操作为</p>
+<p>​    （1）、用方向键移动光标至Enalble loadable module support，确保下面的光标在Select处，回车。保证前方的中括号内有*星号。</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695998822495.png" alt="" loading="lazy"></figure>
+<p>（ 2）、用方向键左右移动下面的光标至Save处，回车。</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695998835833.png" alt="" loading="lazy"></figure>
+<p>​    （3）、此页面默认OK，直接回车即可。</p>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1695998844596.png" alt="" loading="lazy"></figure>
+<p>​    （4）、选中Exit，退出menuconfig</p>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1695998851103.png" alt="" loading="lazy"></figure>
+<p>​    4. 运行 'make oldconfig &amp;&amp; make prepare' 命令来修复内核配置，执行以下命令：</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- oldconfig
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- prepare
+</code></pre>
+<p>​</p>
+<p>​    5.重新编译内核模块，例如执行以下命令：</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules -j4
+</code></pre>
+<p>​</p>
+<p>​    6.如果还有模块依赖于 Module.symvers 文件，则需要先编译内核，例如执行以下命令：</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage -j4
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules -j4
+</code></pre>
+<p>注意，在执行make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage -j4命令时，可能会提示：</p>
+<pre><code>LZO     arch/arm/boot/compressed/piggy_data
+/bin/sh: 1: lzop: not found
+arch/arm/boot/compressed/Makefile:186: recipe for target 'arch/arm/boot/compressed/piggy_data' failed
+</code></pre>
+<p>这是没有安装lzop软件包的缘故，只要执行</p>
+<pre><code>sudo apt-get update
+
+sudo apt-get install lzop
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://Arron795.github.io/post-images/1695998863270.png" alt="" loading="lazy"></figure>
+<p>然后再次执行make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage -j4即可。</p>
+<figure data-type="image" tabindex="6"><img src="https://Arron795.github.io/post-images/1695998874777.png" alt="" loading="lazy"></figure>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Arron795.github.io/post/qt-zhong-jiang-quint16-zhuan-huan-wei-qbytearray-de-fang-fa/">
+                  <h3 class="post-title">
+                    Qt中将quint16转换为QByteArray的方法
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>通过安装VNC服务器x11vnc(或vnc4server)和配置x11vnc.service实现远程通过VNC-Viewer访问VNC服务器。 | Arron&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1696320559756">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="
+Xshell的下载：
+通过Xshell官网（链接：XShell - 下载 (softonic.com)）下载Xshell。
+
+
+图 1 Xshell的下载
+下载完成后安装，安装成功后打开Xshell：
+
+图 2  Xshell 7界面
+2..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Arron795.github.io">
+        <img src="https://Arron795.github.io/images/avatar.png?v=1696320559756" class="site-logo">
+        <h1 class="site-title">Arron&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      来自Arron的blog · ❀
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">通过安装VNC服务器x11vnc(或vnc4server)和配置x11vnc.service实现远程通过VNC-Viewer访问VNC服务器。</h2>
+            <div class="post-date">2022-01-10</div>
+            
+              <div class="feature-container" style="background-image: url('https://Arron795.github.io/post-images/tong-guo-an-zhuang-vnc-fu-wu-qi-x11vnchuo-vnc4serverhe-pei-zhi-x11vncservice-shi-xian-yuan-cheng-tong-guo-vnc-viewer-fang-wen-vnc-fu-wu-qi.png')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <ol>
+<li>Xshell的下载：<br>
+通过Xshell官网（链接：XShell - 下载 (softonic.com)）下载Xshell。</li>
+</ol>
+<p><img src="https://Arron795.github.io/post-images/1695916195059.png" alt="" loading="lazy"><br>
+图 1 Xshell的下载</p>
+<p>下载完成后安装，安装成功后打开Xshell：<br>
+<img src="https://Arron795.github.io/post-images/1695916227053.png" alt="" loading="lazy"><br>
+图 2  Xshell 7界面</p>
+<p>2.2 Ubuntu下x11vnc的安装和文件配置<br>
+1、步骤1：<br>
+在Ubantu18.04上查找虚拟机ip地址,并通过shell 7 连接。<br>
+<img src="https://Arron795.github.io/post-images/1695916244700.png" alt="" loading="lazy"><br>
+图 3  Xshell 7输入用户名界面</p>
+<p><img src="https://Arron795.github.io/post-images/1695916261344.png" alt="" loading="lazy"><br>
+图 4  Xshell 7使用虚拟机用户密码登录界面</p>
+<p><img src="https://Arron795.github.io/post-images/1695916271253.png" alt="" loading="lazy"><br>
+图 5  Xshell 7连接虚拟机ip地址成功界面</p>
+<p>2、步骤2：安装VNC相关软件包</p>
+<p>sudo apt-get -y install x11vnc</p>
+<p><img src="https://Arron795.github.io/post-images/1695916289989.png" alt="" loading="lazy"><br>
+图 6  在Xshell 7下连接虚拟机并安装x11vnc软件包</p>
+<p>3、步骤3：安装lightdm图形界面软件包<br>
+sudo apt-get -y install lightdm<br>
+<img src="https://Arron795.github.io/post-images/1695916306969.png" alt="" loading="lazy"><br>
+图7  安装lightdm软件包<br>
+选择lightdm并确定：<br>
+<img src="https://Arron795.github.io/post-images/1695916312606.png" alt="" loading="lazy"><br>
+图 8  lightdm设定界面</p>
+<p>4、步骤4：创建配置目录<br>
+mkdir -pv /home/syl4222/.vnc/<br>
+<img src="https://Arron795.github.io/post-images/1695916322825.png" alt="" loading="lazy"><br>
+图 9  配置目录</p>
+<p>5、步骤5：设置用户的VNC connecting密码<br>
+x11vnc -storepasswd syl795 /home/syl4222/.vnc/passwd  (红色部分为密码，黄色部分为用户名)<br>
+<img src="https://Arron795.github.io/post-images/1695916374498.png" alt="" loading="lazy"><br>
+图 10  设置VNC连接密码</p>
+<p>6、步骤6：在当前目录下生成vnc配置文件<br>
+cat&gt; x11vnc.service &lt;&lt;EOF</p>
+<p>[Unit]</p>
+<p>Description=Start x11vnc at startup.</p>
+<p>After=multi-user.target</p>
+<p>[Service]</p>
+<p>Type=simple</p>
+<p>ExecStart=/usr/bin/x11vnc -auth guess -once -loop -noxdamage -repeat -rfbauth -geometry 1024x768 /home/syl4222/.vnc/passwd -rfbport 5900 -shared</p>
+<p>[Install]</p>
+<p>WantedBy=multi-user.target</p>
+<p>EOF<br>
+<img src="https://Arron795.github.io/post-images/1695916388197.png" alt="" loading="lazy"><br>
+图 11  在当前目录下生成vnc配置文件</p>
+<p>7、步骤7：<br>
+剪切配置文件<br>
+sudo mv x11vnc.service /lib/systemd/system/x11vnc.service</p>
+<p>修改权限为root<br>
+sudo chown root:root /lib/systemd/system/x11vnc.service</p>
+<p>重新加载服务配置文件</p>
+<p>sudo systemctl daemon-reload</p>
+<p>开机启动vnc服务<br>
+sudo systemctl enable x11vnc.service</p>
+<p><img src="https://Arron795.github.io/post-images/1695916465137.png" alt="" loading="lazy"><br>
+图 12  （步骤7）</p>
+<p>8、步骤8：重启操作系统</p>
+<p>sudo reboot</p>
+<p><img src="https://Arron795.github.io/post-images/1695916458147.png" alt="" loading="lazy"><br>
+图 13  重启界面（不知道为什么和原来的界面不一样）</p>
+<p>2.3 Ubuntu下VNC-Viewer访问VNC服务器</p>
+<p>1、步骤1：查看监听端口<br>
+sudo ss -tunlp<br>
+<img src="https://Arron795.github.io/post-images/1695916477702.png" alt="" loading="lazy"><br>
+图 14 监听端口</p>
+<p>2、步骤2：通过VNC viewr进行连接</p>
+<p>输入IP地址和监听端口<br>
+<img src="https://Arron795.github.io/post-images/1695916487028.png" alt="" loading="lazy"><br>
+图 15   通过VNC连接虚拟机</p>
+<p>输入密码：（注意此处的密码是上文步骤5中设置的）<br>
+<img src="https://Arron795.github.io/post-images/1695916493281.png" alt="" loading="lazy"><br>
+图 16  VNC认证</p>
+<p>大功告成！<br>
+<img src="https://Arron795.github.io/post-images/1695916501375.png" alt="" loading="lazy"><br>
+图 17  实现在VNC Viewer上连接虚拟机</p>
+<ol start="3">
+<li>总结<br>
+1.用Xshell新建会话的时候，要根据虚拟机的IP地址来新建会话。<br>
+2.在Xshell输入的用户名必须是虚拟机的用户名，否则会出现密码报错。<br>
+3.若在Xshell界面ssh不通虚拟机的IP地址，应该考虑是否已经将虚拟机的网络设置为桥接网卡模式。<br>
+4.本次实践需要提前安装openssh-server软件包，若安装失败，可以考虑通过虚拟机上 显示应用程序 —&gt; 软件和更新—&gt; Ubuntu软件 —&gt; 下载自 —&gt; 选择其他站点 —&gt; 选择阿里云的服务器，并把上面的选项勾上，再重新尝试安装。（如下图）<br>
+<img src="https://Arron795.github.io/post-images/1695916511040.png" alt="" loading="lazy"><br>
+图 18  软件和更新相关配置</li>
+</ol>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Arron795.github.io/post/about/">
+                  <h3 class="post-title">
+                    关于
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Qt安装工具MaintenanceTool安装插件出现无法下载存档的解决方法 | Arron&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1696320559756">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="问题背景
+
+在移植Qt项目时，代码中出现头文件QTextCodec无法找到的错误（QTextCodec是Qt5中的类，Qt6删除了该类），我使用的是Qt6版本，查阅解决方法，找到的方法要在Qt安装工具MaintenanceTool中添加组件..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Arron795.github.io">
+        <img src="https://Arron795.github.io/images/avatar.png?v=1696320559756" class="site-logo">
+        <h1 class="site-title">Arron&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      来自Arron的blog · ❀
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Qt安装工具MaintenanceTool安装插件出现无法下载存档的解决方法</h2>
+            <div class="post-date">2023-03-31</div>
+            
+              <div class="feature-container" style="background-image: url('https://Arron795.github.io/post-images/qt-an-zhuang-gong-ju-maintenancetool-an-zhuang-cha-jian-chu-xian-wu-fa-xia-zai-cun-dang-de-jie-jue-fang-fa.png')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="问题背景">问题背景</h2>
+<ul>
+<li>在移植Qt项目时，代码中出现头文件QTextCodec无法找到的错误（QTextCodec是Qt5中的类，Qt6删除了该类），我使用的是Qt6版本，查阅解决方法，找到的方法要在Qt安装工具MaintenanceTool中添加组件Qt 5 Compatibility Module</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695996886673.png" alt="" loading="lazy"></figure>
+<h2 id="遇到的问题">遇到的问题</h2>
+<p>1、点击添加或移除组件都会出现提示：</p>
+<p>Your MaintenanceTool appears to be older than 3.0.2<br>
+Please update it first to get access to new Qt packages</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695996905713.png" alt="" loading="lazy"></figure>
+<p>2、添加组件，在下载的过程中出现：</p>
+<p>无法下载存档 http://download.qt.io/online/gtsdkrepository/<br>
+windows x86/desktop/qt6 650 src doc examples/gt.gt6.650.doc/<br>
+6.5.0-0-202303161324gt5-documentation.zip: Error transferring<br>
+https://mirrors.aliyun.com/atproject/online/gtsdkrepository/<br>
+windows x86/desktop/qt6 650 src doc examples/gt.gt6.650.doc/<br>
+6.5.0-0-202303161324qt5-documentation.zip - server replied: Not<br>
+Found</p>
+<h2 id="解决方法">解决方法</h2>
+<p>1、在MaintenanceTool页面点击右下角的设置</p>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1695996916275.png" alt="" loading="lazy"></figure>
+<p>在网络选项下选择系统代理设置，HTTP代理填入的是中国科学技术大学的qt镜像源，并填入端口号8080</p>
+<blockquote>
+<p>中国科学技术大学：http://mirrors.ustc.edu.cn/qtproject/</p>
+</blockquote>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1695996928562.png" alt="" loading="lazy"></figure>
+<p>当然也可以尝试其他qt镜像源：（本人未试过）</p>
+<blockquote>
+<p>清华大学：https://mirrors.tuna.tsinghua.edu.cn/qt/<br>
+北京理工大学：http://mirror.bit.edu.cn/qtproject/<br>
+中国互联网络信息中心：http://mirror.bit.edu.cn/qtproject/</p>
+</blockquote>
+<h2 id="特别提醒">特别提醒</h2>
+<ul>
+<li>本解决方案仅供参考，不保证所有遇到该问题的电脑都能解决，具体情况还需要具体分析。</li>
+</ul>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Arron795.github.io/post/keil-5-xia-chu-xian-error-l6218e-undefined-symbol-delayunsigned-referred-from-mainode-jie-jue-fang-fa/">
+                  <h3 class="post-title">
+                    Keil 5下出现Error: L6218E: Undefined symbol Delay(unsigned) (referred from main.o).的解决方法
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

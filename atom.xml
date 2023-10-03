@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://Arron795.github.io</id>
+    <title>Arron&apos;s blog</title>
+    <updated>2023-10-03T08:20:19.735Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://Arron795.github.io"/>
+    <link rel="self" href="https://Arron795.github.io/atom.xml"/>
+    <subtitle>来自Arron的blog · ❀</subtitle>
+    <logo>https://Arron795.github.io/images/avatar.png</logo>
+    <icon>https://Arron795.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2023, Arron&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[我的第一篇记录。]]></title>
+        <id>https://Arron795.github.io/post/wo-de-di-yi-pian-ji-lu/</id>
+        <link href="https://Arron795.github.io/post/wo-de-di-yi-pian-ji-lu/">
+        </link>
+        <updated>2023-09-28T11:32:23.000Z</updated>
+        <summary type="html"><![CDATA[<pre><code>今天是2023.9.28，中秋节前夕，在大家都开始准备启程回家的日子里，我记录下了我的第一篇blog。
+</code></pre>
+]]></summary>
+        <content type="html"><![CDATA[<pre><code>今天是2023.9.28，中秋节前夕，在大家都开始准备启程回家的日子里，我记录下了我的第一篇blog。
+</code></pre>
+<!-- more -->
+<p>这是我第一次搭建自己的静态网站，在暑期见过我哥的个人网站后，搭建一个属于我自己的网站这个想法便发出萌芽，但一直都没有很心血来潮。再次迸发出这种欲望是上周在做ESP32-Cam连接阿里云物联网平台时，偶然找到一位名叫巧遇的blog，在这位前辈的最后一个blog里出现了Gridea的字样，怀揣走过路过不放过的好奇心理，进入了Gridea的数字花园，于是便有了你现在所看到的这篇文章。</p>
+<!-- more -->
+<p>没有什么图好放，那就简单插入两张晚餐叭。🙂（听说吃波叔面家的人都很会幸运~）<br>
+<img src="https://Arron795.github.io/post-images/1695911822561.jpg" alt="" loading="lazy"></p>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695911841440.jpg" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Thread 2 “ThreadPool.out“ received signal SIGSEGV, Segmentation fault.关于空指针解引用引起的段错误异常]]></title>
+        <id>https://Arron795.github.io/post/thread-2-threadpoolout-received-signal-sigsegv-segmentation-faultguan-yu-kong-zhi-zhen-jie-yin-yong-yin-qi-de-duan-cuo-wu-yi-chang/</id>
+        <link href="https://Arron795.github.io/post/thread-2-threadpoolout-received-signal-sigsegv-segmentation-faultguan-yu-kong-zhi-zhen-jie-yin-yong-yin-qi-de-duan-cuo-wu-yi-chang/">
+        </link>
+        <updated>2023-07-17T13:39:57.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="问题背景">问题背景</h2>
+<p>​        最近在学习Linux的多线程和线程池，在调试用C写的一段线程池代码的过程中，出现了一个错误（只截了关键部分）：</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695999552986.png" alt="" loading="lazy"></figure>
+<pre><code>Thread 2 &quot;ThreadPool.out&quot; received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7ffff77c2700 (LWP 4298)]
+0x00005555555555fa in manager (arg=0x0) at /home/syl/projects/ThreadPool/threadpool.c:246
+246        while (!pool-&gt;shutdown)
+Segmentation fault
+</code></pre>
+<p>大意是说在246行的while (!pool-&gt;shutdown)处出现了段错误。（图中是修改过的所以显示250，可忽略）</p>
+<p>这里说明一下246行附近写了什么：</p>
+<pre><code>void* manager(void* arg)
+{
+	ThreadPool* pool = (ThreadPool*)arg;
+	while (!pool-&gt;shutdown)                    // 246行处
+	{
+        ...
+    }
+    return NULL;
+}
+</code></pre>
+<p>首先来了解一下什么是段错误。（懂的可以略过）</p>
+<pre><code>段错误（Segmentation Fault），通常简称为&quot;segfault&quot;，是指当程序访问了一个无效的内存地址或者试图对只读内存进行写操作时，操作系统会终止程序的执行并抛出段错误异常。
+
+段错误通常是由以下情况引起的：
+
+1. 空指针解引用：当程序试图对空指针进行解引用操作，即访问空指针指向的内存地址时，会导致段错误。
+2. 访问越界：当程序访问了超出分配给它的内存范围的地址或数组的越界索引时，会导致段错误。
+3. 写入只读内存：当程序试图向只读内存地址写入数据时，如字符串常量，会导致段错误。
+4. 栈溢出：当程序的栈空间超过了系统所允许的最大限制，会导致栈溢出，进而产生段错误。
+
+段错误的发生会导致程序崩溃，可能会导致进程异常终止。它是一种严重的错误，常常表示程序中存在错误的内存访问行为，如指针错误、内存越界等。调试和修复段错误通常需要定位错误发生的位置，并检查程序中的内存操作、指针使用等问题。使用调试工具（如GDB）和良好的编程实践可以帮助发现和修复段错误。
+</code></pre>
+<hr>
+<h2 id="问题解决">问题解决</h2>
+<p>经过和原创者的源代码反复对比，发现线程池创建函数 threadPoolCreate，其中创建线程那里有个函数是：</p>
+<pre><code>pthread_create (&amp;pool-&gt;managerID, NULL, manager, pool); 
+</code></pre>
+<p><strong>注意pthread_create这个函数的第四个参数是 pool</strong></p>
+<p>而我的代码中写的是：</p>
+<pre><code>pthread_create (&amp;pool-&gt;managerID, NULL, manager, NULL); 
+</code></pre>
+<p>到这里问题的原因就很明显了，我错把第四个参数写成了NULL，这导致了将一个空指针NULL作为参数arg传递给了manager。这相当于245行的</p>
+<pre><code>ThreadPool* pool = (ThreadPool*)arg;
+</code></pre>
+<p>将一个空指针赋给了pool，这样在判断while(!pool-&gt;shutdown)时，当然会出错啦！</p>
+<p>出错的原因也很明显，导致段错误的原因是 pool 变量为 NULL 或未初始化，在尝试访问 pool-&gt;shutdown 时会导致无效的内存访问。（空指针解引用引起的段错误）</p>
+<p>最后修改完之后重新调试，编译成功！</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695999561226.png" alt="" loading="lazy"></figure>
+<hr>
+<h2 id="感谢">感谢</h2>
+<p>感谢线程池作者爱编程的大丙提供的学习资源。🙂</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ IMX6ULL编译led驱动程序出现fatal error: generated/autoconf.h以及 ERROR: Kernel configuration is invalid.的解决方法]]></title>
+        <id>https://Arron795.github.io/post/imx6ull-bian-yi-led-qu-dong-cheng-xu-chu-xian-fatal-error-generatedautoconfh-yi-ji-error-kernel-configuration-is-invalidde-jie-jue-fang-fa/</id>
+        <link href="https://Arron795.github.io/post/imx6ull-bian-yi-led-qu-dong-cheng-xu-chu-xian-fatal-error-generatedautoconfh-yi-ji-error-kernel-configuration-is-invalidde-jie-jue-fang-fa/">
+        </link>
+        <updated>2023-06-12T16:53:23.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="问题背景">问题背景</h2>
+<p>​        最近在学习IMX6ULL的驱动程序，在用make命令执行编译led驱动程序时，出现以下报错：</p>
+<pre><code>make -C /home/book/100ask_imx6ull-sdk/Linux-4.9.88 M=pwd modules 
+make[1]: 进入目录“/home/book/100ask_imx6ull-sdk/Linux-4.9.88”
+
+  ERROR: Kernel configuration is invalid.
+         include/generated/autoconf.h or include/config/auto.conf are missing.
+         Run 'make oldconfig &amp;&amp; make prepare' on kernel src to fix it.
+
+  WARNING: Symbol version dump ./Module.symvers
+           is missing; modules will have no dependencies and modversions.
+
+  CC [M]  /home/book/01_all_series_quickstart/05_嵌入式Linux驱动开发基础知识/source/02_led_drv/00_led_drv_simple/imx6ull/led_drv.o
+In file included from :0:0:
+././include/linux/kconfig.h:4:10: fatal error: generated/autoconf.h: 没有那个文件或目录
+ #include &lt;generated/autoconf.h&gt;
+          ^~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+scripts/Makefile.build:299: recipe for target '/home/book/01_all_series_quickstart/05_嵌入式Linux驱动开发基础知识/source/02_led_drv/00_led_drv_simple/imx6ull/led_drv.o' failed
+make[2]: *** [/home/book/01_all_series_quickstart/05_嵌入式Linux驱动开发基础知识/source/02_led_drv/00_led_drv_simple/imx6ull/led_drv.o] Error 1
+Makefile:1499: recipe for target 'module/home/book/01_all_series_quickstart/05_嵌入式Linux驱动开发基础知识/source/02_led_drv/00_led_drv_simple/imx6ull' failed
+make[1]: *** [module/home/book/01_all_series_quickstart/05_嵌入式Linux驱动开发基础知识/source/02_led_drv/00_led_drv_simple/imx6ull] Error 2
+make[1]: 离开目录“/home/book/100ask_imx6ull-sdk/Linux-4.9.88”
+Makefile:13: recipe for target 'all' failed
+make: *** [all] Error 2
+</code></pre>
+<pre><code>    很明显，上面出现了两个错误和一个警告：
+</code></pre>
+<h3 id="错误1">错误1：</h3>
+<pre><code>ERROR: Kernel configuration is invalid.
+         include/generated/autoconf.h or include/config/auto.conf are missing.
+         Run 'make oldconfig &amp;&amp; make prepare' on kernel src to fix it.
+</code></pre>
+<p>大意是说内核配置无效。缺少include/generated/autoconf.h或include/config/auto.conf文件。</p>
+<p>需要特别注意的是，这里报错提示给出了解决建议：在内核源码的目录下运行make oldconfig &amp;&amp; make prepare来修复该报错。</p>
+<h3 id="错误2">错误2：</h3>
+<pre><code>././include/linux/kconfig.h:4:10: fatal error: generated/autoconf.h: 没有那个文件或目录
+ #include &lt;generated/autoconf.h&gt;
+          ^~~~~~~~~~~~~~~~~~~~~~
+</code></pre>
+<p>意思是说，././include/linux/kconfig.h里没有链接generated/autoconf.h文件。</p>
+<h3 id="警告">警告：</h3>
+<pre><code>  WARNING: Symbol version dump ./Module.symvers
+           is missing; modules will have no dependencies and modversions.
+</code></pre>
+<p>大意是说，Linux内核代码的目录下丢失了符号版本信息文件 Module.symvers文件，将会导致模块没有依赖项和版本信息。</p>
+<h2 id="解决过程">解决过程</h2>
+<p>​       首要考虑是按报错的建议操作去解决，但是到了Linux的源码目录下执行了make oldconfig，但是它会出现许多需要配置的问答，即使我长按空格按默认答案回答，依然需要很长的时间，在长按了一会儿后，直接Ctrl + C放弃了这个建议。几经周折后，终于找到了一个可行的解决方法。</p>
+<h2 id="解决方法">解决方法</h2>
+<p>1.首先进入内核源代码目录，执行以下命令：</p>
+<pre><code>make mrproper
+</code></pre>
+<p>​    这个命令会清除先前的编译结果和配置文件。</p>
+<p>2.配置内核编译选项和模块，例如执行以下命令：</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- 100ask_imx6ull_defconfig
+</code></pre>
+<p>​    其中，100ask_imx6ull_defconfig是我使用的硬件平台对应的配置文件。如使用其他配置文件，需要根据实际情况修改。</p>
+<p>3.生成Makefile文件，例如执行以下命令：</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
+</code></pre>
+<p>​    make menuconfig这个命令会打开一个文本界面的配置工具，可以在里面配置内核编译选项和模块。配置完成后，保存退出即可。</p>
+<p>​    具体操作为</p>
+<p>​    （1）、用方向键移动光标至Enalble loadable module support，确保下面的光标在Select处，回车。保证前方的中括号内有*星号。</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695998822495.png" alt="" loading="lazy"></figure>
+<p>（ 2）、用方向键左右移动下面的光标至Save处，回车。</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695998835833.png" alt="" loading="lazy"></figure>
+<p>​    （3）、此页面默认OK，直接回车即可。</p>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1695998844596.png" alt="" loading="lazy"></figure>
+<p>​    （4）、选中Exit，退出menuconfig</p>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1695998851103.png" alt="" loading="lazy"></figure>
+<p>​    4. 运行 'make oldconfig &amp;&amp; make prepare' 命令来修复内核配置，执行以下命令：</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- oldconfig
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- prepare
+</code></pre>
+<p>​</p>
+<p>​    5.重新编译内核模块，例如执行以下命令：</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules -j4
+</code></pre>
+<p>​</p>
+<p>​    6.如果还有模块依赖于 Module.symvers 文件，则需要先编译内核，例如执行以下命令：</p>
+<pre><code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage -j4
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules -j4
+</code></pre>
+<p>注意，在执行make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage -j4命令时，可能会提示：</p>
+<pre><code>LZO     arch/arm/boot/compressed/piggy_data
+/bin/sh: 1: lzop: not found
+arch/arm/boot/compressed/Makefile:186: recipe for target 'arch/arm/boot/compressed/piggy_data' failed
+</code></pre>
+<p>这是没有安装lzop软件包的缘故，只要执行</p>
+<pre><code>sudo apt-get update
+
+sudo apt-get install lzop
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://Arron795.github.io/post-images/1695998863270.png" alt="" loading="lazy"></figure>
+<p>然后再次执行make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage -j4即可。</p>
+<figure data-type="image" tabindex="6"><img src="https://Arron795.github.io/post-images/1695998874777.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Qt中将quint16转换为QByteArray的方法]]></title>
+        <id>https://Arron795.github.io/post/qt-zhong-jiang-quint16-zhuan-huan-wei-qbytearray-de-fang-fa/</id>
+        <link href="https://Arron795.github.io/post/qt-zhong-jiang-quint16-zhuan-huan-wei-qbytearray-de-fang-fa/">
+        </link>
+        <updated>2023-05-21T11:51:34.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="问题背景">问题背景</h2>
+<p>​        今天在改进用Qt写的TCP服务器和客户端代码时，想将服务器tcpServer的端口号作为数据发送给客户端，并且需要转为Utf8格式。遇到一个问题，调用TcpSocket中的write(const QByteArray &amp;data)方法，write方法的参数列表中需要填入的参数类型是QByteArray，但tcpServer的serverPort()是一个quint16类型。</p>
+<pre><code>    问了一下chatGPT，给出的方案是，先将quint转为QTextCodec再转为QByteArray。但我使用的Qt版本是Qt6，已经弃用了QTextCodec。
+</code></pre>
+<hr>
+<h2 id="问题思考和解决方法">问题思考和解决方法</h2>
+<p>​        需要解决上述问题，那么就需要将quint16转为QByteArray类型，想法是：首先调用QString的number(int num)方法，将quint16转为QSting，再调用QByteArray的toUtf8()将QString转为QByteArray。</p>
+<pre><code>    具体代码：
+
+    quint16 input = this-&gt;tcpServer-&gt;serverPort();
+    QString str = QString::number(input);                //一定要用number转化  不然乱码
+    QByteArray bytes = str.toUtf8();
+</code></pre>
+<p>上述代码为了写成一行放在tcpSocket的write方法的参数列表里，改成</p>
+<pre><code>QByteArray(QString::number(this-&gt;tcpServer-&gt;serverPort()).toUtf8())
+</code></pre>
+<p>具体为：</p>
+<pre><code>tmpTcpSocket-&gt;write(QByteArray(QString::number(this-&gt;tcpServer-&gt;serverPort()).toUtf8()) + &quot; : &quot; + ui.sendEdit-&gt;text().toUtf8());
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ubuntu18.04意外重启后出现GNU GRUB version 2.02的解决方法]]></title>
+        <id>https://Arron795.github.io/post/ubuntu1804-yi-wai-chong-qi-hou-chu-xian-gnu-grub-version-202-de-jie-jue-fang-fa/</id>
+        <link href="https://Arron795.github.io/post/ubuntu1804-yi-wai-chong-qi-hou-chu-xian-gnu-grub-version-202-de-jie-jue-fang-fa/">
+        </link>
+        <updated>2023-04-14T11:01:03.000Z</updated>
+        <content type="html"><![CDATA[<ul>
+<li><strong>该解决方案仅供参考，不保证所有设备都能解决</strong></li>
+</ul>
+<h2 id="问题背景">问题背景：</h2>
+<ul>
+<li>通过Windows11使用VM Wave软件开启Ubuntu18.04虚拟机，在设置虚拟网络编辑器和网络适配器连接时，主机意外蓝屏（我电脑老毛病了每次都这样，用的电脑是联想小新13pro 2020版）。</li>
+</ul>
+<h2 id="问题描述">问题描述：</h2>
+<ul>
+<li>重启主机后，照旧打开虚拟机，发现进不去图形界面，显示一个标题GNU GRUB version 2.02的界面。</li>
+</ul>
+<h2 id="解决方案">解决方案：</h2>
+<p>接下来需要进入Ubuntu的恢复模式，可以按照以下步骤操作：</p>
+<ol>
+<li>
+<p>在计算机启动时，按住Shift键（我的虚拟机不用按，看具体情况），直到出现Grub引导菜单。</p>
+</li>
+<li>
+<p>在Grub菜单中选择“Advanced options for Ubuntu”或“高级选项”，然后选择Ubuntu内核版本后面的“recovery mode”或“恢复模式”选项。</p>
+</li>
+<li>
+<p>如果需要，输入用户名和密码，进入恢复模式的终端。 在恢复模式中，可以进行一些常见的系统维护操作，如文件系统检查和修复、网络设置、密码重置等。具体的操作步骤和选项可能因Ubuntu版本和配置而异，建议在操作前仔细阅读提示信息和文档。</p>
+<p>然后会进入一个界面显示：</p>
+</li>
+</ol>
+<blockquote>
+<p>1.520391] piix4_smbus 0000:00:07.3: SMBUS Host Controller not enabled!2.123455] sd 32:0:0:0: [sda] Assuming drive cache: write throughdev/sda1 contains a file system with errors, check forced.dev/sda1:Entry 'job.cache'in /var/cache/cups (538460) has an incorrect filetype (was 1,should be 2). dev/sda1: UNEXPECTED INCONSISTENCY; RUN fSCK MANUALLY.(i.e.,without -a or -p options)fsck exited with status code 4The root filesystem on /dev/sdal requires a manual fsck BusyBox y1.27.2 (Ubuntu 1:1.27.2-2ubuntu3.2) built-in shell (ash)nter help for a list of built-in commands.</p>
+<p>（initramfs)</p>
+</blockquote>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695997618322.png" alt="" loading="lazy"></figure>
+<p>此图用软件翻译过 所以是中文，原文是英文。</p>
+<p>这段提示信息表明/dev/sda1分区中的文件系统出现了一些错误，需要进行fsck检查和修复。下面是解决问题的步骤：</p>
+<ol>
+<li>
+<p>在命令提示符（initramfs）下输入“fsck /dev/sda1”命令，对/dev/sda1分区进行检查和修复。如果提示需要输入“y”或“yes”确认，则输入确认。</p>
+</li>
+<li>
+<p>如果fsck检查和修复过程无法自动解决问题，可以尝试使用“fsck /dev/sda1 -y”命令，使用自动模式进行检查和修复。但需要注意的是，自动模式可能会删除部分数据或文件，因此需要谨慎操作。</p>
+</li>
+<li>
+<p>如果上述方法仍无法解决问题，可以尝试使用Ubuntu安装盘或Live CD/USB启动计算机，并进入恢复模式。</p>
+</li>
+<li>
+<p>在恢复模式中，选择“fsck”或“修复文件系统”等选项，进行文件系统的检查和修复。这个过程可能需要一些时间，需要耐心等待。</p>
+</li>
+<li>
+<p>如果文件系统检查和修复无法解决问题，可以尝试重新安装Ubuntu系统，或者使用备份数据恢复系统。 总之，需要根据具体情况采取相应的解决方案。在进行fsck检查和修复时，需要谨慎操作，避免误删数据或文件。建议在操作前备份重要数据。</p>
+</li>
+</ol>
+<p>​	输入完fsck /dev/sda1后显示：</p>
+<blockquote>
+<p>/dev/sda1: ***** FILE SYSTEM WAS MODIFIED ***** dev/sda1: 183614/1441792 files (0.1% non-contiguous)，2449716/5766656 blocks</p>
+<p>(initramfs)</p>
+</blockquote>
+<ul>
+<li>
+<p>​	出现“FILE SYSTEM WAS MODIFIED”，说明文件系统已经进行了修复。此时，可以尝试重新启动计算机，看看是否能够正常进入Ubuntu系统。如果能够正常进入系统，建议进行一些常规的系统维护操作，如清理无用文件、更新软件包等，避免类似问题再次出现。 如果重新启动后仍然出现问题，可以尝试进入恢复模式，进行进一步的排查和修复。在恢复模式中，可以进行文件系统的检查和修复、网络设置、密码重置等操作，具体的操作步骤和选项可能因Ubuntu版本和配置而异，建议在操作前仔细阅读提示信息和文档。 总之，在进行任何操作前，需要备份重要数据，以避免数据丢失。</p>
+</li>
+<li>
+<p>此时，只要再输入reboot重启命令进行重启，再次进入GNU GRUB version 2.02界面选择Ubuntu，回车即可。</p>
+</li>
+<li>
+<p>到此，ubuntu已经能正常启动并看到图形界面了，问题解决。</p>
+</li>
+</ul>
+<p><strong>再次声明，本解决方案仅供参考，不保证能解决所有设备上出现的同样问题。</strong></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Qt安装工具MaintenanceTool安装插件出现无法下载存档的解决方法]]></title>
+        <id>https://Arron795.github.io/post/qt-an-zhuang-gong-ju-maintenancetool-an-zhuang-cha-jian-chu-xian-wu-fa-xia-zai-cun-dang-de-jie-jue-fang-fa/</id>
+        <link href="https://Arron795.github.io/post/qt-an-zhuang-gong-ju-maintenancetool-an-zhuang-cha-jian-chu-xian-wu-fa-xia-zai-cun-dang-de-jie-jue-fang-fa/">
+        </link>
+        <updated>2023-03-30T17:07:46.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="问题背景">问题背景</h2>
+<ul>
+<li>在移植Qt项目时，代码中出现头文件QTextCodec无法找到的错误（QTextCodec是Qt5中的类，Qt6删除了该类），我使用的是Qt6版本，查阅解决方法，找到的方法要在Qt安装工具MaintenanceTool中添加组件Qt 5 Compatibility Module</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695996886673.png" alt="" loading="lazy"></figure>
+<h2 id="遇到的问题">遇到的问题</h2>
+<p>1、点击添加或移除组件都会出现提示：</p>
+<p>Your MaintenanceTool appears to be older than 3.0.2<br>
+Please update it first to get access to new Qt packages</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695996905713.png" alt="" loading="lazy"></figure>
+<p>2、添加组件，在下载的过程中出现：</p>
+<p>无法下载存档 http://download.qt.io/online/gtsdkrepository/<br>
+windows x86/desktop/qt6 650 src doc examples/gt.gt6.650.doc/<br>
+6.5.0-0-202303161324gt5-documentation.zip: Error transferring<br>
+https://mirrors.aliyun.com/atproject/online/gtsdkrepository/<br>
+windows x86/desktop/qt6 650 src doc examples/gt.gt6.650.doc/<br>
+6.5.0-0-202303161324qt5-documentation.zip - server replied: Not<br>
+Found</p>
+<h2 id="解决方法">解决方法</h2>
+<p>1、在MaintenanceTool页面点击右下角的设置</p>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1695996916275.png" alt="" loading="lazy"></figure>
+<p>在网络选项下选择系统代理设置，HTTP代理填入的是中国科学技术大学的qt镜像源，并填入端口号8080</p>
+<blockquote>
+<p>中国科学技术大学：http://mirrors.ustc.edu.cn/qtproject/</p>
+</blockquote>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1695996928562.png" alt="" loading="lazy"></figure>
+<p>当然也可以尝试其他qt镜像源：（本人未试过）</p>
+<blockquote>
+<p>清华大学：https://mirrors.tuna.tsinghua.edu.cn/qt/<br>
+北京理工大学：http://mirror.bit.edu.cn/qtproject/<br>
+中国互联网络信息中心：http://mirror.bit.edu.cn/qtproject/</p>
+</blockquote>
+<h2 id="特别提醒">特别提醒</h2>
+<ul>
+<li>本解决方案仅供参考，不保证所有遇到该问题的电脑都能解决，具体情况还需要具体分析。</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Keil 5下出现Error: L6218E: Undefined symbol Delay(unsigned) (referred from main.o).的解决方法]]></title>
+        <id>https://Arron795.github.io/post/keil-5-xia-chu-xian-error-l6218e-undefined-symbol-delayunsigned-referred-from-mainode-jie-jue-fang-fa/</id>
+        <link href="https://Arron795.github.io/post/keil-5-xia-chu-xian-error-l6218e-undefined-symbol-delayunsigned-referred-from-mainode-jie-jue-fang-fa/">
+        </link>
+        <updated>2023-02-28T13:00:11.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="问题背景">问题背景：</h2>
+<blockquote>
+<p>​        今天在给stm32f407vgt6点灯时，想实现循环闪烁，于是想从以前的工程中移植一个delay延时函数，移植后编译时发现出现错误：</p>
+<p>Error: L6218E: Undefined symbol Delay(unsigned) (referred from main.o).的解决方法</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695995760960.png" alt="" loading="lazy"></figure>
+</blockquote>
+<h2 id="解决过程的思考">解决过程的思考:</h2>
+<blockquote>
+<p>​        在确定了头文件Include路径的包含和.c文件的添加后，想起之前用C++实现STM32F103C8T6串口字符输出看过的一篇文章，文中提到一个工程中含有.cpp文件和.c文件混合实现时，在文件类型是C++的main.cpp下 所有用C语言实现的模块，添加.h时要加上</p>
+<p>extern &quot;C&quot;</p>
+<p>{</p>
+<pre><code>    #include&quot;xxx.h&quot;                //xxx代表文件名 ，根据实际修改               
+</code></pre>
+<p>}</p>
+<p>且文章的作者多次强调extern&quot;C&quot;</p>
+</blockquote>
+<h2 id="解决方法">解决方法：</h2>
+<p>​        原来包含的头文件如下，此处delay.c是用C语言实现，这种情况下会出现标题中的错误：</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695995769826.png" alt="" loading="lazy"></figure>
+<p>需要修改为如下：</p>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1695995779282.png" alt="" loading="lazy"></figure>
+<p>再次编译，完美解决。</p>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1695995786366.png" alt="" loading="lazy"></figure>
+<h2 id="总结">总结：</h2>
+<p>​        在C++工程中想加入C语言实现的模块，在包含头文件时，需添加extern&quot;C&quot;{ xxx.h }。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[VS2022新建Qt项目出现“找不到 异常来自HERSULT:0x80030002“的解决方法]]></title>
+        <id>https://Arron795.github.io/post/vs2022-xin-jian-qt-xiang-mu-chu-xian-zhao-bu-dao-yi-chang-lai-zi-hersult0x80030002de-jie-jue-fang-fa/</id>
+        <link href="https://Arron795.github.io/post/vs2022-xin-jian-qt-xiang-mu-chu-xian-zhao-bu-dao-yi-chang-lai-zi-hersult0x80030002de-jie-jue-fang-fa/">
+        </link>
+        <updated>2023-02-06T10:26:52.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="问题描述">问题描述：</h2>
+<p>​	 Visual Studio 2022新建Qt Widgets Application 项目时出现 “找不到。异常来自HERSULT：80030002”。</p>
+<hr>
+<h2 id="解决方法">解决方法：</h2>
+<p>打开VS，在顶栏找到</p>
+<p>拓展 —&gt; 管理扩展</p>
+<p>在已安装找到Qt VS Tools 点击卸载。（卸载完记得关闭所有VS窗口）</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695995813870.png" alt="" loading="lazy"></figure>
+<p>重启<a href="https://so.csdn.net/so/search?q=VS2022&amp;spm=1001.2101.3001.7020">VS2022</a>，还是点击扩展下的管理扩展 重新安装Qt VS Tools，安装完还是关闭所有VS窗口。</p>
+<p>再次重启VS2022，新建<a href="https://so.csdn.net/so/search?q=Qt%E9%A1%B9%E7%9B%AE&amp;spm=1001.2101.3001.7020">Qt项目</a>，顺利新建。</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695995818667.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[基于STM32F103C8T6以USB to TTL 和 ST-LINK V2两种方式点亮LED小灯泡]]></title>
+        <id>https://Arron795.github.io/post/ji-yu-stm32f103c8t6/</id>
+        <link href="https://Arron795.github.io/post/ji-yu-stm32f103c8t6/">
+        </link>
+        <updated>2022-11-19T13:29:03.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="一-硬件设备">一、硬件设备</h2>
+<p>所需设备：</p>
+<pre><code>            1、STM32F103C8T6；
+
+            2、USB 转 TLL 或 ST-LINK V2 01-0；
+
+            3、杜邦线若干；
+
+            4、面包板1个；
+
+            5、USB安卓数据线（使用USB 转 TLL需要用到）；
+</code></pre>
+<h2 id="二-工程建立">二、工程建立</h2>
+<p><strong>1、首先需要建立一个STM32F103C8T6的keil工程。</strong></p>
+<p>​    可以根据以下链接结合实际情况建立：</p>
+<p>​    <a href="https://blog.csdn.net/hongliwong/article/details/110863014">(74条消息) STM32新建keil工程具体步骤（详细）_爱学习的小王呀的博客-CSDN博客</a></p>
+<h2 id="三-环境配置编写代码">三、环境配置&amp;编写代码</h2>
+<h3 id="1-环境配置">1、环境配置</h3>
+<p>环境配置和代码可以参考以下两个链接：</p>
+<p><a href="https://blog.csdn.net/txmnQAQ/article/details/120903713">(74条消息) 用STM32F103C8T6制作流水灯_甜心猛男的博客-CSDN博客_c8t6烧程序时需要改变跳线帽位置吗</a></p>
+<p><a href="https://blog.csdn.net/shutupbb/article/details/120922397">(74条消息) STM32F103寄存器方式点亮LED流水灯_Melody crush的博客-CSDN博客_stm32f103寄存器led点灯</a></p>
+<p>这里简单给出几张个人认为需要注意的点：</p>
+<ol>
+<li>先点击魔法棒</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695990403878.png" alt="" loading="lazy"></figure>
+<ol start="2">
+<li>再点击Device</li>
+</ol>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695990432355.png" alt="" loading="lazy"></figure>
+<ol start="3">
+<li>配置红框内容 ，并点击Debug（如果使用USB 转 TTL则不用勾选蓝色框；如果使用ST-link做的则要勾选）</li>
+</ol>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1695990484911.png" alt="" loading="lazy"></figure>
+<ol start="4">
+<li>点击上图蓝色框里的Setting，选择Flash Download，进行以下配置。（如果不选Reset and Run则每次烧录到板上后都需要按一下板上的Reset按键才会看到现象。选不选看个人，影响不大</li>
+</ol>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1695990500972.png" alt="" loading="lazy"></figure>
+<h3 id="2-编写main函数"><strong>2、编写main函数</strong></h3>
+<pre><code class="language-c">//头文件
+#include &quot;stm32f10x.h&quot;
+#include &quot;GPIOLIKE51.h&quot;
+ 
+//函数声明
+void LED_Init(void);
+void RCC_Configuration(void);
+ 
+//=============================================================================
+//文件名称：Delay
+//功能概要：延时
+//参数说明：nCount：延时长短
+//函数返回：无
+//=============================================================================
+ 
+void Delay(uint32_t nCount)
+{
+  for(; nCount != 0; nCount--);
+}
+ 
+ 
+//=============================================================================
+//文件名称：main
+//功能概要：主函数
+//参数说明：无
+//函数返回：int
+//=============================================================================
+int main(void)
+{
+	
+ 
+	RCC_Configuration();				//开启GPIO时钟
+		
+	LED_Init();                         //初始LED引脚的GPIO口
+    while (1)
+		{
+			PAout(1)=0;					//1为灭
+			Delay(0xfffff);             //延时
+			Delay(0xfffff);	
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			PAout(1)=1;
+ 
+			PBout(12)=0;					//0为亮
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			PBout(12)=1;
+ 
+			PCout(15)=0;					
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			Delay(0xfffff);
+			PCout(15)=1;
+ 
+    }
+}
+ 
+ 
+//=============================================================================
+//文件名称：RCC_Configuration
+//功能概要：开启GPIO时钟
+//参数说明：无
+//函数返回：无
+//=============================================================================
+ 
+void RCC_Configuration(void)
+{
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);		//开启GPIOA时钟并使能
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);		//开启GPIOB时钟并使能
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);		//开启GPIOC时钟并使能
+}
+ 
+ 
+ 
+//=============================================================================
+//文件名称：LED_Init
+//功能概要：LED引脚的GPIO初始化
+//参数说明：无
+//函数返回：无
+//=============================================================================
+ 
+void LED_Init(void)
+{
+		GPIO_InitTypeDef GPIO_InitStruct;												//声明GPIO初始化结构体,声明要在最前面
+ 
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);	//开启GPIOA时钟并使能
+ 
+		
+		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_1;					//定义GPIO初始化结构体的GPIO引脚
+		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;			//定义GPIO初始化结构体的GPIO输出模式
+		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;		    //定义GPIO初始化结构体的GPIO速率
+ 
+		GPIO_Init(GPIOA,  &amp;GPIO_InitStruct);					//初始化GPIO
+ 
+	
+ 
+		
+		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_12;			    	//定义GPIO初始化结构体的GPIO引脚
+		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;			//定义GPIO初始化结构体的GPIO输出模式，推挽输出模式
+		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;		    //定义GPIO初始化结构体的GPIO速率
+ 
+		GPIO_Init(GPIOB,  &amp;GPIO_InitStruct);					//初始化GPIO
+ 
+		
+ 
+ 
+		
+		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_15;					//定义GPIO初始化结构体的GPIO引脚
+		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;			//定义GPIO初始化结构体的GPIO输出模式，推挽输出模式
+		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;			//定义GPIO初始化结构体的GPIO速率
+ 
+		GPIO_Init(GPIOC,  &amp;GPIO_InitStruct);					//初始化GPIO
+ 
+		
+}
+ 
+</code></pre>
+<p>​</p>
+<p>点击下面两个任意一个编译</p>
+<figure data-type="image" tabindex="5"><img src="https://Arron795.github.io/post-images/1695990523762.png" alt="" loading="lazy"></figure>
+<p>确保0错误，0警告。</p>
+<figure data-type="image" tabindex="6"><img src="https://Arron795.github.io/post-images/1695990535308.png" alt="" loading="lazy"></figure>
+<h2 id="四-硬件连接">四、硬件连接</h2>
+<h3 id="1-usb-转-ttl-方式">1、USB 转 TTL 方式</h3>
+<ol>
+<li>
+<p>将STM32F103C8T6插入面包板，注意！一定要插深一点！确保C8T6的引脚能和面包板进行导电！！（笔者因为这个小细节没注意，排查了好几天的代码、硬件，甚至以为是笔者焊接不到位，重新把板的引脚焊过...最后排查出来是面包板和开发板的引脚接触不紧密没导上电...血的眼泪...）</p>
+</li>
+<li>
+<p>USB 转 TLL硬件插上电脑USB端口。</p>
+</li>
+<li>
+<p>USB to TTL硬件和STM32F103C8T6连线。</p>
+<p><strong>跳线帽连接方式：<em>*UBOOT0 用1；UBOOT1用0*</em>。</strong></p>
+<figure data-type="image" tabindex="7"><img src="https://Arron795.github.io/post-images/1695990550879.png" alt="" loading="lazy"></figure>
+<p>​</p>
+<p>​		<strong>USB转TTL连接方式：用杜邦线将USB to TTL的GND连开发板的GND、3.3V连3.3V、<em>*RXD连接PA9*</em>、<em>*TXD连接PA10*</em></strong></p>
+</li>
+</ol>
+<figure data-type="image" tabindex="8"><img src="https://Arron795.github.io/post-images/1695990572211.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://Arron795.github.io/post-images/1695990579286.jpeg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://Arron795.github.io/post-images/1695990588021.jpeg" alt="" loading="lazy"></figure>
+<p>注意，下图此处有小红灯亮了，说明****RXD连接PA9****引脚连接可以导上电；如果是不亮的，则要检查一下是否会导电。</p>
+<figure data-type="image" tabindex="11"><img src="https://Arron795.github.io/post-images/1695990597120.png" alt="" loading="lazy"></figure>
+<p>LED小灯连接方式：根据代码设定的GPIO端口，把LED小灯插到对应的引脚即可。笔者插的是A1、B12、C15引脚。注意！小灯泡会有高低脚，高的一侧要插正极，低的一侧插负极。</p>
+<p>接地连接方式：用杜邦线把开发板上的G和面包板两侧的蓝色负极行连接起来。</p>
+<pre><code>最终连接效果：
+</code></pre>
+<figure data-type="image" tabindex="12"><img src="https://Arron795.github.io/post-images/1695990610863.jpeg" alt="" loading="lazy"></figure>
+<ol start="4">
+<li>打开设备管理器，确保有USB-SERIAL CH340（COMx）（如果没有显示或显示未知设备就去安装一个CH340的驱动）</li>
+</ol>
+<figure data-type="image" tabindex="13"><img src="https://Arron795.github.io/post-images/1695990621665.png" alt="" loading="lazy"></figure>
+<ol start="5">
+<li>
+<p>打开FlyMCU，确保刚才端口是空闲状态（一般来讲，设备管理器识别的COM口号和FlyMCU的COM口号是一致的。这里解释一下为什么这里的COM口号和上面不同，因为笔者没有当时的截图，下面这张图时后来写博客时补的图...原来的端口电脑经常识别有误，所以插了另一个端口。）</p>
+<figure data-type="image" tabindex="14"><img src="https://Arron795.github.io/post-images/1695990648554.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>进行以下配置，并点击三个小点...处，选择工程编译生成的.hex文件，点击开始编程。</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="15"><img src="https://Arron795.github.io/post-images/1695990660128.png" alt="" loading="lazy"></figure>
+<ol start="7">
+<li>别忘记按板上的Reset键，按了之后才会有反应。</li>
+</ol>
+<p>​		*常见问题：</p>
+<ul>
+<li>未知USB设备（设备描述符请求失败）</li>
+</ul>
+<figure data-type="image" tabindex="16"><img src="https://Arron795.github.io/post-images/1695990675581.png" alt="" loading="lazy"></figure>
+<ul>
+<li>FlyMCU的Port端口显示占用</li>
+</ul>
+<figure data-type="image" tabindex="17"><img src="https://Arron795.github.io/post-images/1695990711277.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>解决方法：右键卸载这个设备，再重新插拔USB 转 TTL，多试几次。笔者怀疑是USB转TLL和拓展坞的USB口接触不好导致的。</p>
+</blockquote>
+<ul>
+<li>Fly MCU 出现无法打开串口</li>
+</ul>
+<figure data-type="image" tabindex="18"><img src="https://Arron795.github.io/post-images/1695990762890.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>原因：说明电脑没有识别到USB转TTL的端口，请确保USB转TTL已经插上。如果确认插上，说明还是接触不好的问题。</p>
+<p>解决方法：重新插拔USB 转 TTL，多试几次。（如果有条件，可以尝试更换一个TTL）</p>
+</blockquote>
+<ul>
+<li>无法打开串口COMx:Not Support Setting(bps/byte size etc)!</li>
+</ul>
+<figure data-type="image" tabindex="19"><img src="https://Arron795.github.io/post-images/1695990773230.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>原因：RXD连接PA9没有成功，需要检查一下PA9引脚是否导电，可以看USB转TTL上的小红灯有没有亮，没亮就是没导上电。</p>
+<p>解决方法：1、更换TTL；2、更换杜邦线；3、插拔USB转TTL；4、重新焊接PA9引脚；5、如果之前烧录过其他程序，则尝试一下按Reset后再试一次。</p>
+</blockquote>
+<h3 id="2-st-link-v2-01-0方式">2、ST-LINK V2 01-0方式</h3>
+<ol>
+<li>
+<p>将STM32F103C8T6插入面包板，注意！<strong>一定要插深一点！确保C8T6的引脚能和面包板进行导电！！</strong></p>
+</li>
+<li>
+<p>ST-LINK V2仿真编程器插上电脑USB端口。</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="20"><img src="https://Arron795.github.io/post-images/1695990793647.jpeg" alt="" loading="lazy"></figure>
+<ol start="3">
+<li>
+<p>ST-LINK V2仿真编程器和STM32F103C8T6连线。</p>
+<blockquote>
+<ul>
+<li><em>跳线帽连接方式：<strong>*UBOOT0 用0；UBOOT1用0*</strong>。</em></li>
+</ul>
+<figure data-type="image" tabindex="21"><img src="https://Arron795.github.io/post-images/1695990801977.png" alt="" loading="lazy"></figure>
+<ul>
+<li>ST-LINK和电脑连接方式：（开发板上的DCLK就是ST-LINK上的CLK）</li>
+</ul>
+<figure data-type="image" tabindex="22"><img src="https://Arron795.github.io/post-images/1695990816553.jpeg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="23"><img src="https://Arron795.github.io/post-images/1695990829793.jpeg" alt="" loading="lazy"></figure>
+<ul>
+<li>LED小灯连接方式：根据代码设定的GPIO端口，把LED小灯插到对应的引脚即可。笔者插的是A1、B12、C15引脚。注意！小灯泡会有高低脚，高的一侧要插正极，低的一侧插负极。</li>
+</ul>
+<p>​            接地连接方式：用杜邦线把开发板上的G和面包板两侧的蓝色负极行连接起来。</p>
+<p>连接最终效果：<br>
+<img src="https://Arron795.github.io/post-images/1695990842215.jpeg" alt="" loading="lazy"><br>
+<img src="https://Arron795.github.io/post-images/1695990933154.jpeg" alt="" loading="lazy"></p>
+</blockquote>
+</li>
+<li>
+<p>打开设备管理器，确保有STM32 STLink （如果没有显示或显示未知设备就去安装一个STLink的驱动）</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="24"><img src="https://Arron795.github.io/post-images/1695990947103.png" alt="" loading="lazy"></figure>
+<ol start="5">
+<li>
+<p>打开Keil，在确认编译过、0错误，0警告后点击LOAD下载按钮。</p>
+<figure data-type="image" tabindex="25"><img src="https://Arron795.github.io/post-images/1695990973903.png" alt="" loading="lazy"></figure>
+<p>显示下载成功信息。</p>
+<figure data-type="image" tabindex="26"><img src="https://Arron795.github.io/post-images/1695990995095.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>如果在Debug的Setting勾选了Reset and Run则直接可以看到灯亮现象；如果没有勾选Reset and Run则需要再按一下开发板上的RESET按键才可以观察到灯亮现象。</p>
+</li>
+</ol>
+<h2 id="五-实验效果">五、实验效果</h2>
+<h3 id="1-usb-to-ttl">1、USB to TTL：</h3>
+<figure data-type="image" tabindex="27"><img src="https://Arron795.github.io/post-images/1695991008021.gif" alt="" loading="lazy"></figure>
+<h3 id="2-st-link-v2">2、ST-LINK V2 ：</h3>
+<figure data-type="image" tabindex="28"><img src="https://Arron795.github.io/post-images/1695991019339.gif" alt="" loading="lazy"></figure>
+<h2 id="六-写在最后">六、写在最后</h2>
+<p>​	 感谢文中所引用博客的作者提供了思路和帮助，再次感谢。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[关于在桥接模式下用VMware workstation运行Ubantu9.10无法上网的解决方法。]]></title>
+        <id>https://Arron795.github.io/post/guan-yu-zai-qiao-jie-mo-shi-xia-yong-vmware-workstation-yun-xing-ubantu910-wu-fa-shang-wang-de-jie-jue-fang-fa/</id>
+        <link href="https://Arron795.github.io/post/guan-yu-zai-qiao-jie-mo-shi-xia-yong-vmware-workstation-yun-xing-ubantu910-wu-fa-shang-wang-de-jie-jue-fang-fa/">
+        </link>
+        <updated>2022-02-27T09:34:00.000Z</updated>
+        <content type="html"><![CDATA[<p>1、打开控制面板。（不知道怎么打开的小朋友用左下角的搜索，直接搜控制面板）</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695917364429.png" alt="" loading="lazy"></figure>
+<p>2、打开网络和Internet。</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695917380874.png" alt="" loading="lazy"></figure>
+<p>3、点击网络和共享中心。</p>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1695917410538.png" alt="" loading="lazy"></figure>
+<p>4、确认自己网络所用的名称（此处是以太网2），并点击。</p>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1695917417994.png" alt="" loading="lazy"></figure>
+<p>5、点击属性。</p>
+<figure data-type="image" tabindex="5"><img src="https://Arron795.github.io/post-images/1695917432647.png" alt="" loading="lazy"></figure>
+<p>6、找到本网络连接时所使用的网卡（不清楚为什么我这里显示的是声卡...，不过问题不大，记住这串名字就行。）</p>
+<figure data-type="image" tabindex="6"><img src="https://Arron795.github.io/post-images/1695917445985.png" alt="" loading="lazy"></figure>
+<p>7、打开VMare Workstation所在文件夹，找到vmnetcfg.exe（这是一个虚拟网络配置器），点击打开。</p>
+<figure data-type="image" tabindex="7"><img src="https://Arron795.github.io/post-images/1695917458769.png" alt="" loading="lazy"></figure>
+<p>8、点击右下角更改设置。</p>
+<figure data-type="image" tabindex="8"><img src="https://Arron795.github.io/post-images/1695917497038.png" alt="" loading="lazy"></figure>
+<p>9、找到和刚刚一样的网卡，点击应用并确定。（注意：此处作者用网线接口上网，若是连接无线网络的电脑桥接请选择 Wi-Fi 6 那一个。）</p>
+<figure data-type="image" tabindex="9"><img src="https://Arron795.github.io/post-images/1695917508351.png" alt="" loading="lazy"></figure>
+<p>10、 启动虚拟机</p>
+<p>11、打开浏览器可以登录网页，测试IP地址，并尝试ping到主机的IP，成功ping通。</p>
+<figure data-type="image" tabindex="10"><img src="https://Arron795.github.io/post-images/1695917566094.png" alt="" loading="lazy"></figure>
+<p>12、尝试主机ping虚拟机，成功ping通。</p>
+<figure data-type="image" tabindex="11"><img src="https://Arron795.github.io/post-images/1695917574360.png" alt="" loading="lazy"></figure>
+<p>大功告成！</p>
+]]></content>
+    </entry>
+</feed>
