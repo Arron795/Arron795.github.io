@@ -1,0 +1,237 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>虚拟机如何在主机可以访问外网的情况下也访问外网 | Arron&#39;s blog</title>
+
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1718731621580">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+    
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Arron&#39;s blog
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1718731621580"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    虚拟机如何在主机可以访问外网的情况下也访问外网
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2024-01-13 ·
+                    </time>
+                    
+                </div>
+                <div class="post-content">
+                    <h5 id="为什么写这篇文章">为什么写这篇文章？</h5>
+<!-- more -->
+<p>​	最近在学习Raspberry Pi Pico的相关内容，Pico是支持MicroPython SDK和 C++ SDK 的。用MicroPython官方推荐的IDE是Thonny，但我用它写代码觉得很难受，智能提示和补全用起来不是很顺手。我在想要不用VS code + 拓展试试？还真在网上找到了相关的文章，用的是VS code + Python + MicroPico拓展。</p>
+<p>​	在查找相关文章之时，发现了一篇用Raspberry Pi Pico官方C++ SDK + Linux +  cmake 的环境配置教程，开发方式是 Windows下用 VS code 写代码，远程连接Ubuntu虚拟机，在虚拟机下用 gcc 编译 + make构建生成.uf2文件，再将.uf2文件传输到Windows主机并拖拽至RPI-RP2存储设备（即Pico板）实现开发。<br>
+​	教程链接：<a href="https://zhuanlan.zhihu.com/p/676745807">轻松玩转树莓派Pico一、树莓派pico新手上路 - 知乎 (zhihu.com)</a></p>
+<p>​	在Ubuntu用 git 克隆Raspberry Pi官方的Pico SDK时要么特别慢要么会显示拒绝连接，加之有时克隆的项目会出现部分文件缺失。个人猜测是在国内访问GitHub站点不稳定所致。</p>
+<p>​	对个人而言，最好的解决办法就是挂VPN。我在Windows下用的是Clash for windows，最简单的方式就是在Ubuntu也下一个Clash。个人认为，这也是一种解决方式，但一定不是最合理的。那有没有一种方法，让**Windows主机用Clash能够访问外网的同时，让虚拟机也能访问到外网呢？**答案是肯定的。</p>
+<h5 id="解决方法">解决方法：</h5>
+<p>​	在和ChatGPT“磨合”了一会后，摸索出了一套方案。首先，你得具有一些必要的软件或环境。</p>
+<ul>
+<li>主机系统：Windows 11</li>
+<li>代理软件：Clash for windows</li>
+<li>虚拟机软件：VM wave 14</li>
+<li>虚拟机系统：Ubuntu 18.04 LTS（Linux）</li>
+</ul>
+<ol>
+<li>
+<p>打开VM wave 点击编辑 → 虚拟机网络编辑器。<br>
+<img src="https://Arron795.github.io/post-images/1705082434809.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>点击右下角的更改设置，需要用管理员身份运行。<br>
+<img src="https://Arron795.github.io/post-images/1705082623391.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>添加一个网络，选择桥接模式，我电脑和路由器是无线连接的，所以选择Wi-Fi驱动设备，若是用网线连接，选择相应的驱动设备即可。修改完成后，<strong>先点击应用，再点击确定</strong>。<br>
+<img src="https://Arron795.github.io/post-images/1705082639343.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>在Windows下按 Win + R  输入cmd或者powershell，点击确定。<br>
+<img src="https://Arron795.github.io/post-images/1705082665497.png" alt="" loading="lazy"></p>
+<p>在命令行输入ipconfig，查看Windows本地IP。<br>
+<img src="https://Arron795.github.io/post-images/1705082755537.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>登录Ubuntu系统，在命令行输入ifconfig查看本地IP地址，并尝试Ping主机。<br>
+<strong>主机和虚拟机相互Ping通是必须的。</strong><br>
+<img src="https://Arron795.github.io/post-images/1705082766315.png" alt="" loading="lazy"></p>
+</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1705083065408.jpg" alt="" loading="lazy"></figure>
+<ol>
+<li>
+<p>在命令行输入gedit .bashrc（若没有安装gedit工具，则用 vi .bashrc 或 vim .bashrc）。</p>
+<pre><code>sudo gedit .bashrc
+</code></pre>
+<p>在 .bashrc 文件中添加以下两行。</p>
+<pre><code>export http_proxy=http://Windows主机IP:Clash代理端口
+export https_proxy=http://Windows主机IP:Clash代理端口
+</code></pre>
+</li>
+</ol>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1705082791067.png" alt="" loading="lazy"></figure>
+<p>IP是用Windows主机的IP，端口号可以在Clash查看。<br>
+<img src="https://Arron795.github.io/post-images/1705082800707.png" alt="" loading="lazy"></p>
+<p>编辑完 .bashrc 后，Ctrl + S 保存退出。（必要的话可以尝试重启系统，用命令reboot即可重启）</p>
+<ol>
+<li>勾选Clash中的必要选项。（Clash for Windows的使用我不在这里赘述，详细使用教程可上网搜索查得。）<br>
+Allow LAN选项是允许同一网段下的网络绑定，此前我已将 Windows 主机和 Ubuntu 虚拟机已经配置到了同一网段下；System Proxy是开启代理。</li>
+</ol>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1705082823921.png" alt="" loading="lazy"></figure>
+<ol>
+<li>至此，你的虚拟机便可与主机通过桥接模式访问外网。访问外网和在Github拉取文件更加稳定。<br>
+虚拟机下访问YouTube：<br>
+<img src="https://Arron795.github.io/post-images/1705082829130.png" alt="" loading="lazy"></li>
+</ol>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://Arron795.github.io/post/psp/" class="post-title gt-a-link">
+                    关于如何将Android手机中PSP游戏运行在PC端
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">来自Arron的blog · ❀</div>
+    <div class="social-container">
+        
+            
+                <a href="https://arron795.github.io/" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

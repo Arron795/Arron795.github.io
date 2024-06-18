@@ -1,0 +1,199 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>PCB之路 | Arron&#39;s blog</title>
+
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1718731621580">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+    
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Arron&#39;s blog
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1718731621580"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    PCB之路
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2024-06-17 ·
+                    </time>
+                    
+                        <a href="https://Arron795.github.io/tag/KzNxLY8ej/" class="post-tags">
+                            # JLC
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>​	突发奇想！心血来潮！想从0到1动手做一个板子！小巧又精致的C8T6作为最小系统板，无疑是个不错的选择。继“芯片风波”之后，当前大多数厂商的产品开始相继替换国产的MCU，想着既然做了那就做一个国产MCU的项目吧！</p>
+<p>​	兆易创新出品的GD32是目前国内32位单片机的主流替换芯，经了解，GD32F103C8T6的封装与STM32F103C8T6一致，只是芯片主频和Flash等规格上有所不同，物理层面的引脚是完全一致的，可直接替换。</p>
+<p>​	网上对GD32F103C8T6的原理图资料较少，嘉立创EDA开源硬件社区上有不少关于STM32F103C8T6的原理图绘制，本着先模仿、再成为、而后超越的想法，参考了多位前辈画的STM32F103C8T6以及部分GD32其他芯片的原理图，最后决定绘制GD32F103C8T6。</p>
+<p>​	参考项目：</p>
+<ol>
+<li><a href="https://oshwhub.com/hzp345/2024-5-10-stm32f103-minimum-system-board">2024-5-10-STM32F103最小系统板 - 嘉立创EDA开源硬件平台 (oshwhub.com)</a></li>
+<li><a href="https://oshwhub.com/hao_hao/stm32-zui-xiao-xi-tong-ban">STM32最小系统板-Type-C和MicroUSB版本 - 嘉立创EDA开源硬件平台 (oshwhub.com)</a></li>
+<li><a href="https://oshwhub.com/epix/stm32f103c8t6-zui-xiao-xi-tong-ban">stm32f103c8t6最小系统板 - 嘉立创EDA开源硬件平台 (oshwhub.com)</a></li>
+<li><a href="https://oshwhub.com/chenjingwu/stm32f103c8t6">STM32F103C8T6最小系统板 - 嘉立创EDA开源硬件平台 (oshwhub.com)</a></li>
+<li><a href="https://oshwhub.com/li-chuang-kai-fa-ban/li-chuang-gd32e230-zui-xiao-xi-tong-ban">立创·GD32E230最小系统板 - 嘉立创EDA开源硬件平台 (oshwhub.com)</a></li>
+</ol>
+<p>​    GD32F103C8T6 原理图：</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1718643668448.png" alt="" loading="lazy"></figure>
+<p>​    GD32F103C8T6 PCB Layout：</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1718643699756.png" alt="" loading="lazy"></figure>
+<p>​    GD32F103C8T6 预览图：</p>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1718697982302.png" alt="" loading="lazy"></figure>
+<p>​	在此之前，4月份时接触过一点PCB绘制，当时在做毕设，看着我的主控和传感器直接连接了一堆的杜邦线，很是难看，有没有什么方法可以摒弃大量的杜邦线让系统看起来更简洁呢？考虑过用面包板和短线连接，虽然不会耷拉着一堆传感器，但本质还是杜邦线。于是萌生了做个PCB集成一下电路的想法，便开始了原理图首次绘制。</p>
+<p>​    智慧花园项目板原理图：</p>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1718697950642.png" alt="" loading="lazy"></figure>
+<p>​    智慧花园项目板 PCB Layout：</p>
+<figure data-type="image" tabindex="5"><img src="https://Arron795.github.io/post-images/1718697955356.png" alt="" loading="lazy"></figure>
+<p>​   智慧花园项目板预览图：</p>
+<figure data-type="image" tabindex="6"><img src="https://Arron795.github.io/post-images/1718710214091.png" alt="" loading="lazy"></figure>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://Arron795.github.io/post/t113pro-buildroot-gdisk/" class="post-title gt-a-link">
+                     T113-Pro的buildroot添加gdisk ( GPT disks )出现***gptfdisk needs a toolchain w/ C++***的解决方法
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">来自Arron的blog · ❀</div>
+    <div class="social-container">
+        
+            
+                <a href="https://arron795.github.io/" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

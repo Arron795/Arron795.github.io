@@ -1,0 +1,214 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>关于如何将Android手机中PSP游戏运行在PC端 | Arron&#39;s blog</title>
+
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1718731621580">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+    
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Arron&#39;s blog
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1718731621580"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    关于如何将Android手机中PSP游戏运行在PC端
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2023-11-07 ·
+                    </time>
+                    
+                </div>
+                <div class="post-content">
+                    <p>有一款软件叫悟饭游戏厅，它是一款专门将各类安卓、PSP、GBA游戏资源进行归类的软件。玩家想玩任何一种可以运行在PSP、GBA等掌机或是Android手机上的经典游戏，只需要在该软件上搜索并下载安装即可。</p>
+<p>最近在手机上安装了《侠盗猎车：自由城的故事》（Android版），手机操作并没有很方便，且屏幕较小，游戏体验一般。鉴于之前移植过《罪恶都市传奇》（PSP版），于是尝试着将《自由城的故事》也移植到电脑上。</p>
+<h3 id="一-获取游戏的镜像文件">一、获取游戏的镜像文件</h3>
+<ol>
+<li>下载并安装《悟饭游戏厅》。</li>
+<li>将Android手机用数据线连接至PC端，并选择文件传输。（记得打开USB调试模式，可在开发者模式中设置）</li>
+<li>在PC端打开我的电脑，进入路径</li>
+</ol>
+<p><code>“D:/此电脑/your phone's name/内部存储设备/Android\data”</code></p>
+<p>找到一个文件夹名为：“com.join.android.app.mgsim.wufun”。</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1699289936674.png" alt="" loading="lazy"></figure>
+<p>该目录下有两个子目录，一个是“cache”，为空；另一个是“files”。</p>
+<p>进入files，找到“wufan91”文件夹，进入。</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1699377414814.png" alt="" loading="lazy"></figure>
+<p>可以看到，这里有三个命名为数字的文件夹，其中“34”即为《侠盗猎车：自由城的故事》的文件存放位置。（笔者猜测，应是悟饭游戏厅为每个游戏都设定了一个编号）</p>
+<p>继续进入到34下的/roms/xdlczycdgs</p>
+<p>此时的路径是：<code>&quot;D:\此电脑\your phone's name\内部存储设备\com.join.android.app.mgsim.wufun\files\wufan91\34\roms\xdlczycdgs&quot;</code>。</p>
+<p>在此路径下，可以看到一个存储大小为812MB的sdlczycdgs.iso的映像文件。这个文件便是《侠盗猎车：自由城的故事》的安装文件了。将其拷贝至PC端你想存放的路径。</p>
+<h3 id="二-下载psp模拟器ppsspp">二、下载PSP模拟器PPSSPP</h3>
+<blockquote>
+<p>PPSSPP模拟器官网：https://www.ppsspp.org/download/</p>
+</blockquote>
+<p>进入PPSSPP模拟器官网：<a href="https://www.ppsspp.org/download/">Downloads | PPSSPP</a>，根据你的PC和个人喜好选择对应的安装包，笔者是Windows11系统，选择的是Windows的ZIP文件，如下图。</p>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1699376978837.png" alt="" loading="lazy"></figure>
+<p>下载并解压到你想存放的路径下，完成后，可看到<code>“ppsspp_win”</code>文件夹，进入，选择PPSSPPWindows.exe或者PPSSPPWindows64.exe任意一个打开，笔者一般选择用64的打开。</p>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1699377014737.png" alt="" loading="lazy"></figure>
+<p>打开后会看到如下界面：</p>
+<figure data-type="image" tabindex="5"><img src="https://Arron795.github.io/post-images/1699377023033.png" alt="" loading="lazy"></figure>
+<p><em>若打开后显示全屏，可通过按键盘F11键进行全屏切换，也可以在右边的<code>“游戏设置——图像设置——全屏幕”</code>进行勾选。</em></p>
+<h3 id="三-在psp模拟器中选择游戏的iso镜像文件">三、在PSP模拟器中选择游戏的.iso镜像文件</h3>
+<p>在PPSSPP界面下，选择<code>载入新游戏</code>，进入到你PC端存放游戏.iso镜像文件的路径下，可以看到如下的游戏图标，点击进入即可进行游戏。</p>
+<figure data-type="image" tabindex="6"><img src="https://Arron795.github.io/post-images/1699377034914.png" alt="" loading="lazy"></figure>
+<h3 id="四-其他">四、其他</h3>
+<h4 id="1-关于psp游戏运行在pc的psp模拟器上没有手柄该如何用操作游戏呢">1、关于PSP游戏运行在PC的PSP模拟器上，没有手柄该如何用操作游戏呢？</h4>
+<p>进入<code>游戏设置——控制设置——按键映射</code>，可以通过键盘按键映射PSP的游戏按键进行设置。</p>
+<h4 id="2-在pc端进行游戏存档想在手机上载入存档继续游戏该如何操作">2、在PC端进行游戏存档，想在手机上载入存档继续游戏，该如何操作？</h4>
+<p>可在PC端进入你解压PSP模拟器的路径，找到<code>memstick</code>目录（记忆棒存储），进入PSP下的<code>SAVEDATA</code>目录，这个是游戏存档存放的目录，可以看到<code>ULJM05255S0</code>（每个游戏的存档文件目录命名不同），完整路径如下：<code>D:\Desktop\ppsspp_win\memstick\PSP\SAVEDATA\ULJM05255S0</code></p>
+<figure data-type="image" tabindex="7"><img src="https://Arron795.github.io/post-images/1699377055481.png" alt="" loading="lazy"></figure>
+<p>在此目录下，找到DATA.BIN文件和PARAM.SFO文件，将其替换到你的手机对应游戏的存档目录下，如：</p>
+<p><code>“D:\此电脑\your phone's name\内部存储设备\Android\data\com.join.android.app.mgsim.wufun\files\PSP\SAVEDATA\ULJM05255S0”</code></p>
+<p>（这里解释一下为什么下图的游戏存档目录是ULJM05297S92F0，上面的是ULJM05255S0，因为笔者截下面的图的时候进错目录了，这是《罪恶都市传奇》的存档目录，然而编辑到此处已经拔了数据线了...当然这无关紧要，只要进入同款游戏对应的目录即可。）</p>
+<figure data-type="image" tabindex="8"><img src="https://Arron795.github.io/post-images/1699377068404.png" alt="" loading="lazy"></figure>
+<p>至此即可完成游戏存档在PC和手机之间的转移。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://Arron795.github.io/post/firstblog/" class="post-title gt-a-link">
+                    我的第一篇记录。
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">来自Arron的blog · ❀</div>
+    <div class="social-container">
+        
+            
+                <a href="https://arron795.github.io/" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Qt安装工具MaintenanceTool安装插件出现无法下载存档的解决方法 | Arron&#39;s blog</title>
+
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1718731621580">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+    
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Arron&#39;s blog
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1718731621580"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Qt安装工具MaintenanceTool安装插件出现无法下载存档的解决方法
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2023-03-31 ·
+                    </time>
+                    
+                </div>
+                <div class="post-content">
+                    <h2 id="问题背景">问题背景</h2>
+<ul>
+<li>在移植Qt项目时，代码中出现头文件QTextCodec无法找到的错误（QTextCodec是Qt5中的类，Qt6删除了该类），我使用的是Qt6版本，查阅解决方法，找到的方法要在Qt安装工具MaintenanceTool中添加组件Qt 5 Compatibility Module</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695996886673.png" alt="" loading="lazy"></figure>
+<h2 id="遇到的问题">遇到的问题</h2>
+<p>1、点击添加或移除组件都会出现提示：</p>
+<p>Your MaintenanceTool appears to be older than 3.0.2<br>
+Please update it first to get access to new Qt packages</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695996905713.png" alt="" loading="lazy"></figure>
+<p>2、添加组件，在下载的过程中出现：</p>
+<p>无法下载存档 http://download.qt.io/online/gtsdkrepository/<br>
+windows x86/desktop/qt6 650 src doc examples/gt.gt6.650.doc/<br>
+6.5.0-0-202303161324gt5-documentation.zip: Error transferring<br>
+https://mirrors.aliyun.com/atproject/online/gtsdkrepository/<br>
+windows x86/desktop/qt6 650 src doc examples/gt.gt6.650.doc/<br>
+6.5.0-0-202303161324qt5-documentation.zip - server replied: Not<br>
+Found</p>
+<h2 id="解决方法">解决方法</h2>
+<p>1、在MaintenanceTool页面点击右下角的设置</p>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1695996916275.png" alt="" loading="lazy"></figure>
+<p>在网络选项下选择系统代理设置，HTTP代理填入的是中国科学技术大学的qt镜像源，并填入端口号8080</p>
+<blockquote>
+<p>中国科学技术大学：http://mirrors.ustc.edu.cn/qtproject/</p>
+</blockquote>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1695996928562.png" alt="" loading="lazy"></figure>
+<p>当然也可以尝试其他qt镜像源：（本人未试过）</p>
+<blockquote>
+<p>清华大学：https://mirrors.tuna.tsinghua.edu.cn/qt/<br>
+北京理工大学：http://mirror.bit.edu.cn/qtproject/<br>
+中国互联网络信息中心：http://mirror.bit.edu.cn/qtproject/</p>
+</blockquote>
+<h2 id="特别提醒">特别提醒</h2>
+<ul>
+<li>本解决方案仅供参考，不保证所有遇到该问题的电脑都能解决，具体情况还需要具体分析。</li>
+</ul>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://Arron795.github.io/post/keil5L6218E/" class="post-title gt-a-link">
+                    Keil 5下出现Error: L6218E: Undefined symbol Delay(unsigned) (referred from main.o).的解决方法
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">来自Arron的blog · ❀</div>
+    <div class="social-container">
+        
+            
+                <a href="https://arron795.github.io/" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>关于在桥接模式下用VMware workstation运行Ubantu9.10无法上网的解决方法。 | Arron&#39;s blog</title>
+
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1718731621580">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+    
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Arron&#39;s blog
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1718731621580"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    关于在桥接模式下用VMware workstation运行Ubantu9.10无法上网的解决方法。
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-02-27 ·
+                    </time>
+                    
+                </div>
+                <div class="post-content">
+                    <p>1、打开控制面板。（不知道怎么打开的小朋友用左下角的搜索，直接搜控制面板）</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695917364429.png" alt="" loading="lazy"></figure>
+<p>2、打开网络和Internet。</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695917380874.png" alt="" loading="lazy"></figure>
+<p>3、点击网络和共享中心。</p>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1695917410538.png" alt="" loading="lazy"></figure>
+<p>4、确认自己网络所用的名称（此处是以太网2），并点击。</p>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1695917417994.png" alt="" loading="lazy"></figure>
+<p>5、点击属性。</p>
+<figure data-type="image" tabindex="5"><img src="https://Arron795.github.io/post-images/1695917432647.png" alt="" loading="lazy"></figure>
+<p>6、找到本网络连接时所使用的网卡（不清楚为什么我这里显示的是声卡...，不过问题不大，记住这串名字就行。）</p>
+<figure data-type="image" tabindex="6"><img src="https://Arron795.github.io/post-images/1695917445985.png" alt="" loading="lazy"></figure>
+<p>7、打开VMare Workstation所在文件夹，找到vmnetcfg.exe（这是一个虚拟网络配置器），点击打开。</p>
+<figure data-type="image" tabindex="7"><img src="https://Arron795.github.io/post-images/1695917458769.png" alt="" loading="lazy"></figure>
+<p>8、点击右下角更改设置。</p>
+<figure data-type="image" tabindex="8"><img src="https://Arron795.github.io/post-images/1695917497038.png" alt="" loading="lazy"></figure>
+<p>9、找到和刚刚一样的网卡，点击应用并确定。（注意：此处作者用网线接口上网，若是连接无线网络的电脑桥接请选择 Wi-Fi 6 那一个。）</p>
+<figure data-type="image" tabindex="9"><img src="https://Arron795.github.io/post-images/1695917508351.png" alt="" loading="lazy"></figure>
+<p>10、 启动虚拟机</p>
+<p>11、打开浏览器可以登录网页，测试IP地址，并尝试ping到主机的IP，成功ping通。</p>
+<figure data-type="image" tabindex="10"><img src="https://Arron795.github.io/post-images/1695917566094.png" alt="" loading="lazy"></figure>
+<p>12、尝试主机ping虚拟机，成功ping通。</p>
+<figure data-type="image" tabindex="11"><img src="https://Arron795.github.io/post-images/1695917574360.png" alt="" loading="lazy"></figure>
+<p>大功告成！</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://Arron795.github.io/post/x11vnc/" class="post-title gt-a-link">
+                    通过安装VNC服务器x11vnc(或vnc4server)和配置x11vnc.service实现远程通过VNC-Viewer访问VNC服务器。
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">来自Arron的blog · ❀</div>
+    <div class="social-container">
+        
+            
+                <a href="https://arron795.github.io/" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

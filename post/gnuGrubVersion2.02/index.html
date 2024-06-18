@@ -1,0 +1,237 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>ubuntu18.04意外重启后出现GNU GRUB version 2.02的解决方法 | Arron&#39;s blog</title>
+
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1718731621580">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+    
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Arron&#39;s blog
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1718731621580"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    ubuntu18.04意外重启后出现GNU GRUB version 2.02的解决方法
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2023-04-14 ·
+                    </time>
+                    
+                </div>
+                <div class="post-content">
+                    <ul>
+<li><strong>该解决方案仅供参考，不保证所有设备都能解决</strong></li>
+</ul>
+<h2 id="问题背景">问题背景：</h2>
+<ul>
+<li>通过Windows11使用VM Wave软件开启Ubuntu18.04虚拟机，在设置虚拟网络编辑器和网络适配器连接时，主机意外蓝屏（我电脑老毛病了每次都这样，用的电脑是联想小新13pro 2020版）。</li>
+</ul>
+<h2 id="问题描述">问题描述：</h2>
+<ul>
+<li>重启主机后，照旧打开虚拟机，发现进不去图形界面，显示一个标题GNU GRUB version 2.02的界面。</li>
+</ul>
+<h2 id="解决方案">解决方案：</h2>
+<p>接下来需要进入Ubuntu的恢复模式，可以按照以下步骤操作：</p>
+<ol>
+<li>
+<p>在计算机启动时，按住Shift键（我的虚拟机不用按，看具体情况），直到出现Grub引导菜单。</p>
+</li>
+<li>
+<p>在Grub菜单中选择“Advanced options for Ubuntu”或“高级选项”，然后选择Ubuntu内核版本后面的“recovery mode”或“恢复模式”选项。</p>
+</li>
+<li>
+<p>如果需要，输入用户名和密码，进入恢复模式的终端。 在恢复模式中，可以进行一些常见的系统维护操作，如文件系统检查和修复、网络设置、密码重置等。具体的操作步骤和选项可能因Ubuntu版本和配置而异，建议在操作前仔细阅读提示信息和文档。</p>
+<p>然后会进入一个界面显示：</p>
+</li>
+</ol>
+<blockquote>
+<p>1.520391] piix4_smbus 0000:00:07.3: SMBUS Host Controller not enabled!2.123455] sd 32:0:0:0: [sda] Assuming drive cache: write throughdev/sda1 contains a file system with errors, check forced.dev/sda1:Entry 'job.cache'in /var/cache/cups (538460) has an incorrect filetype (was 1,should be 2). dev/sda1: UNEXPECTED INCONSISTENCY; RUN fSCK MANUALLY.(i.e.,without -a or -p options)fsck exited with status code 4The root filesystem on /dev/sdal requires a manual fsck BusyBox y1.27.2 (Ubuntu 1:1.27.2-2ubuntu3.2) built-in shell (ash)nter help for a list of built-in commands.</p>
+<p>（initramfs)</p>
+</blockquote>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695997618322.png" alt="" loading="lazy"></figure>
+<p>此图用软件翻译过 所以是中文，原文是英文。</p>
+<p>这段提示信息表明/dev/sda1分区中的文件系统出现了一些错误，需要进行fsck检查和修复。下面是解决问题的步骤：</p>
+<ol>
+<li>
+<p>在命令提示符（initramfs）下输入“fsck /dev/sda1”命令，对/dev/sda1分区进行检查和修复。如果提示需要输入“y”或“yes”确认，则输入确认。</p>
+</li>
+<li>
+<p>如果fsck检查和修复过程无法自动解决问题，可以尝试使用“fsck /dev/sda1 -y”命令，使用自动模式进行检查和修复。但需要注意的是，自动模式可能会删除部分数据或文件，因此需要谨慎操作。</p>
+</li>
+<li>
+<p>如果上述方法仍无法解决问题，可以尝试使用Ubuntu安装盘或Live CD/USB启动计算机，并进入恢复模式。</p>
+</li>
+<li>
+<p>在恢复模式中，选择“fsck”或“修复文件系统”等选项，进行文件系统的检查和修复。这个过程可能需要一些时间，需要耐心等待。</p>
+</li>
+<li>
+<p>如果文件系统检查和修复无法解决问题，可以尝试重新安装Ubuntu系统，或者使用备份数据恢复系统。 总之，需要根据具体情况采取相应的解决方案。在进行fsck检查和修复时，需要谨慎操作，避免误删数据或文件。建议在操作前备份重要数据。</p>
+</li>
+</ol>
+<p>​	输入完fsck /dev/sda1后显示：</p>
+<blockquote>
+<p>/dev/sda1: ***** FILE SYSTEM WAS MODIFIED ***** dev/sda1: 183614/1441792 files (0.1% non-contiguous)，2449716/5766656 blocks</p>
+<p>(initramfs)</p>
+</blockquote>
+<ul>
+<li>
+<p>​	出现“FILE SYSTEM WAS MODIFIED”，说明文件系统已经进行了修复。此时，可以尝试重新启动计算机，看看是否能够正常进入Ubuntu系统。如果能够正常进入系统，建议进行一些常规的系统维护操作，如清理无用文件、更新软件包等，避免类似问题再次出现。 如果重新启动后仍然出现问题，可以尝试进入恢复模式，进行进一步的排查和修复。在恢复模式中，可以进行文件系统的检查和修复、网络设置、密码重置等操作，具体的操作步骤和选项可能因Ubuntu版本和配置而异，建议在操作前仔细阅读提示信息和文档。 总之，在进行任何操作前，需要备份重要数据，以避免数据丢失。</p>
+</li>
+<li>
+<p>此时，只要再输入reboot重启命令进行重启，再次进入GNU GRUB version 2.02界面选择Ubuntu，回车即可。</p>
+</li>
+<li>
+<p>到此，ubuntu已经能正常启动并看到图形界面了，问题解决。</p>
+</li>
+</ul>
+<p><strong>再次声明，本解决方案仅供参考，不保证能解决所有设备上出现的同样问题。</strong></p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://Arron795.github.io/post/qtMaintanceTool/" class="post-title gt-a-link">
+                    Qt安装工具MaintenanceTool安装插件出现无法下载存档的解决方法
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">来自Arron的blog · ❀</div>
+    <div class="social-container">
+        
+            
+                <a href="https://arron795.github.io/" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

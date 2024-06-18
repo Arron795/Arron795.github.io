@@ -1,0 +1,223 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Thread 2 “ThreadPool.out“ received signal SIGSEGV, Segmentation fault.关于空指针解引用引起的段错误异常 | Arron&#39;s blog</title>
+
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1718731621580">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+    
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Arron&#39;s blog
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1718731621580"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Thread 2 “ThreadPool.out“ received signal SIGSEGV, Segmentation fault.关于空指针解引用引起的段错误异常
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2023-07-17 ·
+                    </time>
+                    
+                </div>
+                <div class="post-content">
+                    <h2 id="问题背景">问题背景</h2>
+<p>​        最近在学习Linux的多线程和线程池，在调试用C写的一段线程池代码的过程中，出现了一个错误（只截了关键部分）：</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695999552986.png" alt="" loading="lazy"></figure>
+<pre><code>Thread 2 &quot;ThreadPool.out&quot; received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7ffff77c2700 (LWP 4298)]
+0x00005555555555fa in manager (arg=0x0) at /home/syl/projects/ThreadPool/threadpool.c:246
+246        while (!pool-&gt;shutdown)
+Segmentation fault
+</code></pre>
+<p>大意是说在246行的while (!pool-&gt;shutdown)处出现了段错误。（图中是修改过的所以显示250，可忽略）</p>
+<p>这里说明一下246行附近写了什么：</p>
+<pre><code>void* manager(void* arg)
+{
+	ThreadPool* pool = (ThreadPool*)arg;
+	while (!pool-&gt;shutdown)                    // 246行处
+	{
+        ...
+    }
+    return NULL;
+}
+</code></pre>
+<p>首先来了解一下什么是段错误。（懂的可以略过）</p>
+<pre><code>段错误（Segmentation Fault），通常简称为&quot;segfault&quot;，是指当程序访问了一个无效的内存地址或者试图对只读内存进行写操作时，操作系统会终止程序的执行并抛出段错误异常。
+
+段错误通常是由以下情况引起的：
+
+1. 空指针解引用：当程序试图对空指针进行解引用操作，即访问空指针指向的内存地址时，会导致段错误。
+2. 访问越界：当程序访问了超出分配给它的内存范围的地址或数组的越界索引时，会导致段错误。
+3. 写入只读内存：当程序试图向只读内存地址写入数据时，如字符串常量，会导致段错误。
+4. 栈溢出：当程序的栈空间超过了系统所允许的最大限制，会导致栈溢出，进而产生段错误。
+
+段错误的发生会导致程序崩溃，可能会导致进程异常终止。它是一种严重的错误，常常表示程序中存在错误的内存访问行为，如指针错误、内存越界等。调试和修复段错误通常需要定位错误发生的位置，并检查程序中的内存操作、指针使用等问题。使用调试工具（如GDB）和良好的编程实践可以帮助发现和修复段错误。
+</code></pre>
+<hr>
+<h2 id="问题解决">问题解决</h2>
+<p>经过和原创者的源代码反复对比，发现线程池创建函数 threadPoolCreate，其中创建线程那里有个函数是：</p>
+<pre><code>pthread_create (&amp;pool-&gt;managerID, NULL, manager, pool); 
+</code></pre>
+<p><strong>注意pthread_create这个函数的第四个参数是 pool</strong></p>
+<p>而我的代码中写的是：</p>
+<pre><code>pthread_create (&amp;pool-&gt;managerID, NULL, manager, NULL); 
+</code></pre>
+<p>到这里问题的原因就很明显了，我错把第四个参数写成了NULL，这导致了将一个空指针NULL作为参数arg传递给了manager。这相当于245行的</p>
+<pre><code>ThreadPool* pool = (ThreadPool*)arg;
+</code></pre>
+<p>将一个空指针赋给了pool，这样在判断while(!pool-&gt;shutdown)时，当然会出错啦！</p>
+<p>出错的原因也很明显，导致段错误的原因是 pool 变量为 NULL 或未初始化，在尝试访问 pool-&gt;shutdown 时会导致无效的内存访问。（空指针解引用引起的段错误）</p>
+<p>最后修改完之后重新调试，编译成功！</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695999561226.png" alt="" loading="lazy"></figure>
+<hr>
+<h2 id="感谢">感谢</h2>
+<p>感谢线程池作者爱编程的大丙提供的学习资源。🙂</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://Arron795.github.io/post/ledDrive/" class="post-title gt-a-link">
+                     IMX6ULL编译led驱动程序出现fatal error: generated/autoconf.h以及 ERROR: Kernel configuration is invalid.的解决方法
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">来自Arron的blog · ❀</div>
+    <div class="social-container">
+        
+            
+                <a href="https://arron795.github.io/" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

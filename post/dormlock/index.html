@@ -1,0 +1,278 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>以STM32F103C8T6为主控实现的RFID感应宿舍门锁开关 | Arron&#39;s blog</title>
+
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1718731621580">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+    
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Arron&#39;s blog
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1718731621580"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    以STM32F103C8T6为主控实现的RFID感应宿舍门锁开关
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2024-01-16 ·
+                    </time>
+                    
+                </div>
+                <div class="post-content">
+                    <h4 id="为什么做这个东西">为什么做这个东西？</h4>
+<p>​   上个月月末闲来无事上bilibili搜索物联网相关的设计，偶然间看到一个用C8T6 + RFID感应模块 + 舵机实现的小玩意，具体过程是IC卡或者手机NFC区（需复制IC卡后）贴近RFID感应区，C8T6检测到有卡靠近，控制舵机旋转，通过绳索拉动门把手，实现刷卡（手机）入室。觉得这小玩意挺有意思的，并且舍友有时会忘记带钥匙，再加上正好当复习STM32开发流程了，看看能否温故而知新。</p>
+<h4 id="需求分析">需求分析：</h4>
+<ol>
+<li>​	由于该项目用到的外设并没有很多，芯片性能需求不大，所以主控选择的是STM32C8T6F103最小系统板；</li>
+<li>​	项目需要能检测IC卡，感应模块选择网上随便都能买到的 RFID-RC522 ；</li>
+<li>​	项目需要能开门，拉动门把手是最容易的开门方式，舵机拉动是不错的选择，常见的SG90即可。</li>
+<li>​	一般来说，拥有以上三种物料即可简单实现。但是为了更加人性化和合理化，我另外添加了两种物料：
+<ul>
+<li>一个是蜂鸣器， 用于系统检测到IC卡开门时触发声响，方便用户知道当前系统是否成功检测到IC卡并开门，避免无效刷卡进门失败和错过有效进门时机。当检测到正确卡号，响鸣0.5s；当检测到错误卡号，则间隔响鸣0.01秒，直至移开IC卡响鸣停止。</li>
+<li>一个是按键，用于触发中断，唤醒芯片。</li>
+</ul>
+</li>
+</ol>
+<p>​		为什么要唤醒？因为设计之初是打算用移动电源供电，考虑到系统需要长时间供电，如果让单片机长时间无休止地运行，耗电是必然的。（即使比起电脑电视等设备，单片机耗的这点电不算什么，但毕竟是嵌入式，低功耗是嵌入式的特点）</p>
+<p>​		而用户有开门需求的时机并不是长期的，单片机运作时大多数时间都是在等待用户刷卡，真正有效的运作仅有在需要开门的那几秒，那么这样看来，单片机长时间的耗电运作等待用户的到来似乎没有必要。为了避免让单片机长时间的耗电等待，是否有一种方案能让单片机在等待用户到来这段时间里是处于休眠停止的状态，等用户到来了，再唤醒工作呢？我在 STM32F103x8B 的 datasheet 里找到了答案。STM32F103C8T6 芯片设计了三种低功耗模式（详见 STM32F103x8 数据手册 <em>“2.3.12 低功耗模式”</em> ），睡眠模式是其中一种解决思路。</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1705336850557.png" alt="" loading="lazy"></figure>
+<h4 id="解决方案">解决方案：</h4>
+<p>​	datasheet中提到，进入低功耗模式的芯片，可用中断唤醒。于是我的想法是让系统进入睡眠模式，用一个按键作为外部中断EXTI，当用户到来，按下按键触发中断，唤醒系统。此时系统检测是否有卡贴近，当有，驱动舵机开门；当无，在一段循环等待后再次进入睡眠模式。</p>
+<h4 id="物料选型">物料选型：</h4>
+<ul>
+<li>​	主控：STM32F103C8T6</li>
+</ul>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1705336281293.webp" alt="" loading="lazy"></figure>
+<ul>
+<li>​	感应模块：RFID-RC522</li>
+</ul>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1705337287364.jpg" alt="" loading="lazy"></figure>
+<ul>
+<li>​	舵机：SG90</li>
+</ul>
+<img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcbu01.alicdn.com%2Fimg%2Fibank%2F2015%2F017%2F979%2F2642979710_1200542799.jpg&refer=http%3A%2F%2Fcbu01.alicdn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1707980471&t=a3a02d095b9c108015c6855f282a5b4f" alt="img" style="zoom:25%;" />
+<ul>
+<li>​	*有源蜂鸣器：用于开门时作提示音</li>
+</ul>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1705337158668.jpg" alt="" loading="lazy"></figure>
+<ul>
+<li>​	*按键：从鼠标按键上拆下来的小按键</li>
+</ul>
+<figure data-type="image" tabindex="5"><img src="https://Arron795.github.io/post-images/1705337101370.png" alt="" loading="lazy"></figure>
+<ul>
+<li>杜邦线若干：公对母或者母对母，根据自己需求选择</li>
+</ul>
+<figure data-type="image" tabindex="6"><img src="https://Arron795.github.io/post-images/1705337321938.jpg" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p>电源：</p>
+<p>​	电源方案有两种，任选其一即可。考虑到用移动电源会有电源用完，需要拆下电源给其充电的情况，加之对移动电源也是一种损耗，我最终选择的是方案一。</p>
+<ul>
+<li>
+<p>方案一：</p>
+<ul>
+<li>
+<p>5V 1A USB充电头 	1个；</p>
+</li>
+<li>
+<p>5米USB 3.0 公母延长线     1条 （*必须要3.0，2.0不行，尽量挑导线材质好一些的，导线材质差有可能经过长距离的传输，电压到达末端时会有电压损耗，具体长度需求根据实际情况购买）；</p>
+</li>
+<li>
+<p>MicroUSB 充电线     1条；</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>
+<p>方案二：</p>
+<ul>
+<li>
+<p>移动电源     1个；</p>
+</li>
+<li>
+<p>MicroUSB 充电线     1条；</p>
+</li>
+</ul>
+</li>
+</ul>
+<h6 id="这里对电源方案的选择做一个分析仅供参考">这里对电源方案的选择做一个分析，仅供参考。</h6>
+<p>​	根据 STM32F103x8 的数据手册第 5.3.5 节 <em>供电电流特性</em>	提到，在 <em><strong>最大电流消耗</strong></em> 的<strong>运行模式下，使能所有外部时钟，72MHz（最大频率），85℃</strong> 的情况下，电流消耗在50mA。而<strong>关闭所有外设</strong>后，仅在32.8mA。</p>
+</li>
+</ul>
+<figure data-type="image" tabindex="7"><img src="https://Arron795.github.io/post-images/1705336649685.png" alt="" loading="lazy"></figure>
+<p>​	在<strong>睡眠模式下，使能所有外部时钟，72MHz（最大频率），85℃</strong> 的情况下，电流消耗在30mh。<strong>关闭所有外设</strong>后，仅有7.5mA。</p>
+<figure data-type="image" tabindex="8"><img src="https://Arron795.github.io/post-images/1705336664857.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>从上述两图总结得出，在其他条件同等，睡眠模式下可有效降低耗电，若同时关闭不必的外设，可以更进一步地降低耗电。</p>
+</blockquote>
+<p>​	在 <em><strong>典型电流消耗</strong></em>  的<strong>运行模式，使能所有外设，85℃，72MHz</strong>的情况下，电流消耗在40mA上下。</p>
+<figure data-type="image" tabindex="9"><img src="https://Arron795.github.io/post-images/1705336672709.png" alt="" loading="lazy"></figure>
+<p>​	在 <em><strong>典型电流消耗</strong></em>  的<strong>运行模式，关闭所有外设，85℃，72MHz</strong>的情况下，电流消耗在25mA上下。</p>
+<figure data-type="image" tabindex="10"><img src="https://Arron795.github.io/post-images/1705336687217.png" alt="" loading="lazy"></figure>
+<p>​	假设系统以<strong>最大功耗运行（运行模式下，使能所有外部时钟，72MHz），此时50mA的电流消耗，供电电压3.6V</strong>，那么一个小时会消耗0.18度电。一个5000mA的移动电源可供其约138个小时。</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">电</mi><mi mathvariant="normal">能</mi><mi mathvariant="normal">（</mi><mi>k</mi><mi>W</mi><mi>h</mi><mi mathvariant="normal">）</mi><mo>=</mo><mn>0.05</mn><mi>A</mi><mo>×</mo><mn>3.6</mn><mi>V</mi><mo>×</mo><mn>1</mn><mi>h</mi><mo>=</mo><mn>0.18</mn><mi>k</mi><mi>W</mi><mi>h</mi></mrow><annotation encoding="application/x-tex">电能（kWh）=0.05A×3.6V×1h=0.18kWh
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord cjk_fallback">电</span><span class="mord cjk_fallback">能</span><span class="mord cjk_fallback">（</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mord mathdefault">h</span><span class="mord cjk_fallback">）</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">0</span><span class="mord">5</span><span class="mord mathdefault">A</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord">3</span><span class="mord">.</span><span class="mord">6</span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord mathdefault">h</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">1</span><span class="mord">8</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mord mathdefault">h</span></span></span></span></span></p>
+<p>​	再假设系统以<strong>睡眠模式下，72MHz，供电电压3.6V</strong>，此时电流消耗在7.5mA ~ 30mA之间（关闭所有外设 和 使能所有外设），系统用到的外设功能并不多，仅有一个SPI、一个PWM以及若干GPIO，大胆估设电流消耗为15mA，那么一个小时仅消耗0.054度电。一个5000mA的移动电源可供其462个小时左右，有效地降低了电耗。</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">电</mi><mi mathvariant="normal">能</mi><mi mathvariant="normal">（</mi><mi>k</mi><mi>W</mi><mi>h</mi><mi mathvariant="normal">）</mi><mo>=</mo><mn>0.015</mn><mi>A</mi><mo>×</mo><mn>3.6</mn><mi>V</mi><mo>×</mo><mn>1</mn><mi>h</mi><mo>=</mo><mn>0.054</mn><mi>k</mi><mi>W</mi><mi>h</mi></mrow><annotation encoding="application/x-tex">电能（kWh）=0.015A×3.6V×1h=0.054kWh
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord cjk_fallback">电</span><span class="mord cjk_fallback">能</span><span class="mord cjk_fallback">（</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mord mathdefault">h</span><span class="mord cjk_fallback">）</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">0</span><span class="mord">1</span><span class="mord">5</span><span class="mord mathdefault">A</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord">3</span><span class="mord">.</span><span class="mord">6</span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord mathdefault">h</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">0</span><span class="mord">5</span><span class="mord">4</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mord mathdefault">h</span></span></span></span></span></p>
+<h4 id="硬件连接图">硬件连接图：</h4>
+<p>​	*因实际部署时，板上的3.3V和GND口不足，且蜂鸣器位置较为特殊，故把蜂鸣器接在SWD调试口的源地接口。实际操作可根据自己的需求灵活接线。</p>
+<figure data-type="image" tabindex="11"><img src="https://Arron795.github.io/post-images/1705389232655.jpg" alt="" loading="lazy"></figure>
+<h4 id="实物图">实物图：</h4>
+<figure data-type="image" tabindex="12"><img src="https://Arron795.github.io/post-images/1705337583340.jpg" alt="" loading="lazy"></figure>
+<h4 id="部署效果">部署效果：</h4>
+<figure data-type="image" tabindex="13"><img src="https://Arron795.github.io/post-images/1705337807389.gif" alt="" loading="lazy"></figure>
+<blockquote>
+<h5 id="代码链接httpsgithubcomarron795dormlock">代码链接🔗：https://github.com/Arron795/DormLock</h5>
+</blockquote>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://Arron795.github.io/post/clash/" class="post-title gt-a-link">
+                    虚拟机如何在主机可以访问外网的情况下也访问外网
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">来自Arron的blog · ❀</div>
+    <div class="social-container">
+        
+            
+                <a href="https://arron795.github.io/" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

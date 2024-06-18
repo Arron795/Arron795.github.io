@@ -1,0 +1,196 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Keil 5下出现Error: L6218E: Undefined symbol Delay(unsigned) (referred from main.o).的解决方法 | Arron&#39;s blog</title>
+
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1718731621580">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+    
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Arron&#39;s blog
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1718731621580"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Keil 5下出现Error: L6218E: Undefined symbol Delay(unsigned) (referred from main.o).的解决方法
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2023-02-28 ·
+                    </time>
+                    
+                </div>
+                <div class="post-content">
+                    <h2 id="问题背景">问题背景：</h2>
+<blockquote>
+<p>​        今天在给stm32f407vgt6点灯时，想实现循环闪烁，于是想从以前的工程中移植一个delay延时函数，移植后编译时发现出现错误：</p>
+<p>Error: L6218E: Undefined symbol Delay(unsigned) (referred from main.o).的解决方法</p>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1695995760960.png" alt="" loading="lazy"></figure>
+</blockquote>
+<h2 id="解决过程的思考">解决过程的思考:</h2>
+<blockquote>
+<p>​        在确定了头文件Include路径的包含和.c文件的添加后，想起之前用C++实现STM32F103C8T6串口字符输出看过的一篇文章，文中提到一个工程中含有.cpp文件和.c文件混合实现时，在文件类型是C++的main.cpp下 所有用C语言实现的模块，添加.h时要加上</p>
+<p>extern &quot;C&quot;</p>
+<p>{</p>
+<pre><code>    #include&quot;xxx.h&quot;                //xxx代表文件名 ，根据实际修改               
+</code></pre>
+<p>}</p>
+<p>且文章的作者多次强调extern&quot;C&quot;</p>
+</blockquote>
+<h2 id="解决方法">解决方法：</h2>
+<p>​        原来包含的头文件如下，此处delay.c是用C语言实现，这种情况下会出现标题中的错误：</p>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1695995769826.png" alt="" loading="lazy"></figure>
+<p>需要修改为如下：</p>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1695995779282.png" alt="" loading="lazy"></figure>
+<p>再次编译，完美解决。</p>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1695995786366.png" alt="" loading="lazy"></figure>
+<h2 id="总结">总结：</h2>
+<p>​        在C++工程中想加入C语言实现的模块，在包含头文件时，需添加extern&quot;C&quot;{ xxx.h }。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://Arron795.github.io/post/VS-qt-HERSULT/" class="post-title gt-a-link">
+                    VS2022新建Qt项目出现“找不到 异常来自HERSULT:0x80030002“的解决方法
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">来自Arron的blog · ❀</div>
+    <div class="social-container">
+        
+            
+                <a href="https://arron795.github.io/" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

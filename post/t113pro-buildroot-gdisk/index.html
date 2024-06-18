@@ -1,0 +1,207 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title> T113-Pro的buildroot添加gdisk ( GPT disks )出现***gptfdisk needs a toolchain w/ C++***的解决方法 | Arron&#39;s blog</title>
+
+<link rel="shortcut icon" href="https://Arron795.github.io/favicon.ico?v=1718731621580">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://Arron795.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+    
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Arron&#39;s blog
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1718731621580"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                     T113-Pro的buildroot添加gdisk ( GPT disks )出现***gptfdisk needs a toolchain w/ C++***的解决方法
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2024-02-02 ·
+                    </time>
+                    
+                </div>
+                <div class="post-content">
+                    <h3 id="问题背景">问题背景：</h3>
+<p>​   最近入手了百问网的全志T113-Pro，用Emmc启动发现一张32GB的SD卡在烧录了百问网镜像 100ask-t113-pro_sdcard.img 的系统后，仅有200多M的存储空间。第一时间上百问网论坛看是否有板友也出现类似情况，发现了一个帖子正是描述这种情况的。</p>
+<blockquote>
+<p>百问网论坛相关帖子地址：<a href="https://forums.100ask.net/t/topic/1646/4">文件系统打包烧写到sd卡，没有完全利用sd卡的全部空间 - Allwinner / T113_PRO - 嵌入式开发问答社区 (100ask.net)</a></p>
+</blockquote>
+<p>*（<em>这里做一个说明，百问网对全志T113-Pro给了两个镜像，一个是含lvgl的 100ask-t113-pro-lvgl_sdcard.img ，有屏幕的话可以看到开机自启动的lvgl画面，并且可以在/etc/init.d里找到S50lvgl-desktop可执行程序；一个是不含lvgl的 100ask-t113-pro_sdcard.img  ，这两个在空间上相差仅有20多M，前者多70M，后者50多M，注意甄别。）</em></p>
+<pre><code>后来查T113-Pro相关资料，在CSDN意外发现正好有解决该问题的文章。跟着板友学习了一下，在buildroot添加gdisk过程中遇到了一些问题，这里做一个补充，方便后来的板友参考。
+</code></pre>
+<blockquote>
+<p>CSDN文章地址：<a href="https://blog.csdn.net/qq_62815119/article/details/129182940?spm=1001.2014.3001.5502">【全志T113-S3_100ask】SD卡扩容_系统烧录在sd卡中后怎么扩容-CSDN博客</a></p>
+</blockquote>
+<p>buildroot添加gdisk ( GPT disks )步骤可能会遇到的问题：</p>
+<ul>
+<li>gptfdisk无法勾选，显示*** gptfdisk needs a toolchain w/ C++ ***</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://Arron795.github.io/post-images/1706888188919.png" alt="" loading="lazy"></figure>
+<h3 id="解决方法">解决方法：</h3>
+<pre><code>    在buildroot目录下输入make menuconfig 进入配置模式，选中Toolchain  ---&gt; 回车进入。
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://Arron795.github.io/post-images/1706888209994.png" alt="" loading="lazy"></figure>
+<pre><code>    确认一下编译用的C库用的是哪个库。
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://Arron795.github.io/post-images/1706888222985.png" alt="" loading="lazy"></figure>
+<pre><code>    一般选择uClibc-ng和glibc任意一个即可。（回车选择）
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://Arron795.github.io/post-images/1706888228336.png" alt="" loading="lazy"></figure>
+<pre><code>    回车后自动回到Toolchain，往下找到Enable C++ support，按Y勾选，保存退出。
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://Arron795.github.io/post-images/1706888362026.png" alt="" loading="lazy"></figure>
+<pre><code>    随后即可在
+        Target packages  ---&gt; 
+</code></pre>
+<p>​	            Hardware handling  ---&gt;</p>
+<pre><code>    下选择是否勾选gptfdisk，按Y勾选，保存退出。
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://Arron795.github.io/post-images/1706888265014.png" alt="" loading="lazy"></figure>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://Arron795.github.io/post/dormlock/" class="post-title gt-a-link">
+                    以STM32F103C8T6为主控实现的RFID感应宿舍门锁开关
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">来自Arron的blog · ❀</div>
+    <div class="social-container">
+        
+            
+                <a href="https://arron795.github.io/" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://Arron795.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>
